@@ -1,5 +1,6 @@
 import { Outlet, Navigate } from 'react-router-dom';
 import { useAuth } from '../auth';
+import parseJwt from '../../utils/jwtUtil';
 
 export const ProtectRoutes = () => {
     const { cookies } = useAuth();
@@ -11,4 +12,12 @@ export const ProtectRoutesLogged = () => {
     const { cookies } = useAuth();
 
     return cookies.token ? <Navigate to="/" exact /> : <Outlet />;
+};
+
+export const ProtectRoutesByRoles = ({ allowedRoles }) => {
+    const { cookies } = useAuth();
+
+    const role = parseJwt(cookies.token)?.Authorities[0].authority.toLowerCase();
+
+    return allowedRoles.includes(role) ? <Outlet /> : <Navigate to="/" exact />;
 };

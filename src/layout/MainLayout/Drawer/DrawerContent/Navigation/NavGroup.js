@@ -6,10 +6,15 @@ import { Box, List, Typography } from '@mui/material';
 
 // project import
 import NavItem from './NavItem';
+import parseJwt from '../../../../../utils/jwtUtil';
+import { useCookies } from 'react-cookie';
 
 // ==============================|| NAVIGATION - LIST GROUP ||============================== //
 
 const NavGroup = ({ item }) => {
+    const [cookies, setCookie] = useCookies(['token']);
+
+    const role = parseJwt(cookies.token)?.Authorities[0].authority.toLowerCase();
     const menu = useSelector((state) => state.menu);
     const { drawerOpen } = menu;
 
@@ -22,7 +27,9 @@ const NavGroup = ({ item }) => {
                     </Typography>
                 );
             case 'item':
-                return <NavItem key={menuItem.id} item={menuItem} level={1} />;
+                console.log(menuItem.role);
+                console.log(role);
+                return (!menuItem.role || menuItem.role === role) && <NavItem key={menuItem.id} item={menuItem} level={1} />;
             default:
                 return (
                     <Typography key={menuItem.id} variant="h6" color="error" align="center">

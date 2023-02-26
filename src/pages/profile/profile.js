@@ -1,5 +1,5 @@
 // material-ui
-import { Box, Breadcrumbs, Divider, Grid, Link, Stack, Typography } from '@mui/material';
+import { Breadcrumbs, Grid, Link, Stack, Typography } from '@mui/material';
 
 // project import
 import MainCard from 'components/MainCard';
@@ -52,7 +52,6 @@ function Profile() {
                 setLoading(false);
             });
     }, []);
-    console.log(data);
 
     return (
         <Grid container spacing={3}>

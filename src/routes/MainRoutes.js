@@ -1,10 +1,11 @@
 import { lazy } from 'react';
-import { ProtectRoutes, ProtectRoutesLogged } from '../hooks/protectRoutes';
+import { ProtectRoutes, ProtectRoutesByRoles } from '../hooks/protectRoutes';
 // project import
 import Loadable from 'components/Loadable';
 import MainLayout from 'layout/MainLayout';
 import { Navigate } from 'react-router-dom';
 import Profile from '../pages/profile/profile';
+import Examinations from '../pages/examinations/examination';
 
 // render - dashboard
 const DashboardDefault = Loadable(lazy(() => import('pages/dashboard')));
@@ -48,8 +49,13 @@ const MainRoutes = {
                     element: <Profile />
                 },
                 {
-                    path: 'examinations',
-                    element: <Profile />
+                    element: <ProtectRoutesByRoles allowedRoles={['patient']} />,
+                    children: [
+                        {
+                            path: 'examinations',
+                            element: <Examinations />
+                        }
+                    ]
                 },
                 {
                     path: 'shadow',
