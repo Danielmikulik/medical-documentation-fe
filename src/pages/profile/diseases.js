@@ -1,18 +1,17 @@
 // material-ui
 import { Box, Stack, Typography } from '@mui/material';
-import PropTypes from 'prop-types';
 import { useCookies } from 'react-cookie';
 import { useEffect, useState } from 'react';
 import parseJwt from '../../utils/jwtUtil';
 import api from '../../services/api';
 
-function ProfileInfo() {
+export default function InsuranceHistory() {
     const labels = [];
     const values = [];
 
     const [cookies, setCookie] = useCookies(['userLogin', 'token']);
 
-    const [data, setData] = useState({});
+    const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
@@ -20,7 +19,7 @@ function ProfileInfo() {
 
     useEffect(() => {
         api.post(
-            `/api/user/${role}`,
+            `/api/patient_insurance_history`,
             {
                 userLogin: cookies.userLogin
             },
@@ -53,16 +52,14 @@ function ProfileInfo() {
             });
     }, []);
 
-    Object.keys(data).forEach((el) => labels.push(el));
-    Object.values(data).forEach((el) => values.push(el));
-
-    const renderItems = labels.map((label, key) => (
-        <Box key={label} display="flex" py={1} pr={2}>
+    const renderItems = data.map((row) => (
+        <Box key={row.insurance} display="flex" py={1} pr={2}>
             <Typography variant="body1" fontWeight="bold">
-                {label}: &nbsp;
+                {row.insurance}: &nbsp;
             </Typography>
-            {!Array.isArray(values[key]) && renderSingleValue(values[key])}
-            {Array.isArray(values[key]) && <Stack spacing={0.75}>{renderArray(values[key])}</Stack>}
+            <Typography variant="body1" fontWeight="regular" color="text">
+                &nbsp;{`${row.since} - ${row.till ? row.till : 'súčasnosť'}`}
+            </Typography>
         </Box>
     ));
 
@@ -82,21 +79,3 @@ function ProfileInfo() {
         </>
     );
 }
-
-function renderSingleValue(value) {
-    return (
-        <Typography variant="body1" fontWeight="regular" color="text">
-            &nbsp;{value}
-        </Typography>
-    );
-}
-
-function renderArray(array) {
-    return array.map((value) => (
-        <Typography variant="body1" fontWeight="regular" color="text">
-            &nbsp;{value}
-        </Typography>
-    ));
-}
-
-export default ProfileInfo;

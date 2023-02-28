@@ -1,26 +1,19 @@
-// material-ui
-import { Box, Stack, Typography } from '@mui/material';
-import PropTypes from 'prop-types';
+import { useEffect, useMemo, useState } from 'react';
 import { useCookies } from 'react-cookie';
-import { useEffect, useState } from 'react';
-import parseJwt from '../../utils/jwtUtil';
 import api from '../../services/api';
+import { Box, Typography } from '@mui/material';
+import MaterialReactTable from 'material-react-table';
 
-function ProfileInfo() {
-    const labels = [];
-    const values = [];
-
+const Prescriptions = () => {
     const [cookies, setCookie] = useCookies(['userLogin', 'token']);
 
     const [data, setData] = useState({});
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    const role = parseJwt(cookies.token)?.Authorities[0].authority.toLowerCase();
-
     useEffect(() => {
         api.post(
-            `/api/user/${role}`,
+            `/api/prescription/patient_prescriptions`,
             {
                 userLogin: cookies.userLogin
             },
@@ -31,7 +24,14 @@ function ProfileInfo() {
             }
         )
             .then((res) => {
-                setData(res.data);
+                const processedData = res.data.map((row) => {
+                    let temp = Object.assign({}, row);
+                    if (temp.retrievedAt === '01.01.0001 00:00') {
+                        temp.retrievedAt = 'Nevybraný';
+                    }
+                    return temp;
+                });
+                setData(processedData);
                 setError(null);
             })
             .catch(function (error) {
@@ -53,21 +53,43 @@ function ProfileInfo() {
             });
     }, []);
 
-    Object.keys(data).forEach((el) => labels.push(el));
-    Object.values(data).forEach((el) => values.push(el));
-
-    const renderItems = labels.map((label, key) => (
-        <Box key={label} display="flex" py={1} pr={2}>
-            <Typography variant="body1" fontWeight="bold">
-                {label}: &nbsp;
-            </Typography>
-            {!Array.isArray(values[key]) && renderSingleValue(values[key])}
-            {Array.isArray(values[key]) && <Stack spacing={0.75}>{renderArray(values[key])}</Stack>}
-        </Box>
-    ));
+    const columns = useMemo(
+        () => [
+            {
+                accessorKey: 'medicationName',
+                header: 'Názov'
+            },
+            {
+                accessorKey: 'medicationAmount',
+                header: 'Veľkosť balenia'
+            },
+            {
+                accessorKey: 'packageCount',
+                header: 'Počet balení'
+            },
+            {
+                accessorKey: 'doctor',
+                header: 'Doktor'
+            },
+            {
+                accessorKey: 'prescribedAt',
+                header: 'Dátum vystavenia'
+            },
+            {
+                accessorKey: 'retrievedAt',
+                header: 'Dátum vybratia'
+            }
+        ],
+        []
+    );
 
     return (
         <>
+            <Box display="flex" py={1} pr={2} mb={2} ml={1}>
+                <Typography variant="h1" fontWeight="regular" color="text">
+                    Moje Recepty
+                </Typography>
+            </Box>
             {loading && (
                 <Typography variant="button" fontWeight="regular" color="text">
                     Načítavam údaje...
@@ -78,25 +100,9 @@ function ProfileInfo() {
                     Nepodarilo sa načítať údaje...
                 </Typography>
             )}
-            {data && renderItems}
+            {data && <MaterialReactTable columns={columns} data={data} />}
         </>
     );
-}
+};
 
-function renderSingleValue(value) {
-    return (
-        <Typography variant="body1" fontWeight="regular" color="text">
-            &nbsp;{value}
-        </Typography>
-    );
-}
-
-function renderArray(array) {
-    return array.map((value) => (
-        <Typography variant="body1" fontWeight="regular" color="text">
-            &nbsp;{value}
-        </Typography>
-    ));
-}
-
-export default ProfileInfo;
+export default Prescriptions;

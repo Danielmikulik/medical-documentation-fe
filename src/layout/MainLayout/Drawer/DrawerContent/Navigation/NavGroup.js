@@ -27,8 +27,6 @@ const NavGroup = ({ item }) => {
                     </Typography>
                 );
             case 'item':
-                console.log(menuItem.role);
-                console.log(role);
                 return (!menuItem.role || menuItem.role === role) && <NavItem key={menuItem.id} item={menuItem} level={1} />;
             default:
                 return (

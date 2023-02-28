@@ -5,7 +5,8 @@ import Loadable from 'components/Loadable';
 import MainLayout from 'layout/MainLayout';
 import { Navigate } from 'react-router-dom';
 import Profile from '../pages/profile/profile';
-import Examinations from '../pages/examinations/examination';
+import Examinations from '../pages/examinations/examinations';
+import Prescriptions from '../pages/prescription/prescriptions';
 
 // render - dashboard
 const DashboardDefault = Loadable(lazy(() => import('pages/dashboard')));
@@ -52,7 +53,20 @@ const MainRoutes = {
                     element: <ProtectRoutesByRoles allowedRoles={['patient']} />,
                     children: [
                         {
-                            path: 'examinations',
+                            path: 'patient_examinations',
+                            element: <Examinations />
+                        },
+                        {
+                            path: 'prescriptions',
+                            element: <Prescriptions />
+                        }
+                    ]
+                },
+                {
+                    element: <ProtectRoutesByRoles allowedRoles={['doctor']} />,
+                    children: [
+                        {
+                            path: 'doctor_examinations',
                             element: <Examinations />
                         }
                     ]
