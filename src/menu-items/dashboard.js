@@ -29,10 +29,19 @@ const dashboard = {
             id: 'myExaminations',
             title: 'Moje Vyšetrenia',
             type: 'item',
-            url: '/examinations',
+            url: '/patient_examinations',
             icon: icons.MonitorHeartIcon,
             breadcrumbs: false,
             role: 'patient'
+        },
+        {
+            id: 'examinations',
+            title: 'Vyšetrenia',
+            type: 'item',
+            url: '/doctor_examinations',
+            icon: icons.MonitorHeartIcon,
+            breadcrumbs: false,
+            role: 'doctor'
         },
         {
             id: 'myPrescriptions',
@@ -40,6 +49,15 @@ const dashboard = {
             type: 'item',
             url: '/prescriptions',
             icon: icons.MedicationIcon,
+            breadcrumbs: false,
+            role: 'patient'
+        },
+        {
+            id: 'accessRequest',
+            title: 'Žiadosti o prístup',
+            type: 'item',
+            url: '/access_request',
+            icon: icons.MonitorHeartIcon,
             breadcrumbs: false,
             role: 'patient'
         }

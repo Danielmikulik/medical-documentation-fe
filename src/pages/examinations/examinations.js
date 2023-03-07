@@ -4,16 +4,17 @@ import { useCookies } from 'react-cookie';
 import api from '../../services/api';
 import { Box, Typography } from '@mui/material';
 
-const Examinations = () => {
+const Examinations = ({ userRole }) => {
     const [cookies, setCookie] = useCookies(['userLogin', 'token']);
 
     const [data, setData] = useState({});
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    console.log(userRole);
     useEffect(() => {
         api.post(
-            `/api/med_exams/patient_exams`,
+            `/api/med_exams/${userRole}`,
             {
                 userLogin: cookies.userLogin
             },
@@ -45,12 +46,12 @@ const Examinations = () => {
                 setLoading(false);
             });
     }, []);
+    console.log(data);
 
-    //should be memoized or stable
     const columns = useMemo(
         () => [
             {
-                accessorKey: 'type', //access nested data with dot notation
+                accessorKey: 'type',
                 header: 'Typ'
             },
             {
@@ -58,26 +59,35 @@ const Examinations = () => {
                 header: 'Choroba'
             },
             {
-                accessorKey: 'doctor', //normal accessorKey
+                accessorKey: 'doctor',
                 header: 'Doktor'
-            },
-            {
-                accessorKey: 'startTime',
-                header: 'Začiatok'
-            },
-            {
-                accessorKey: 'endTime',
-                header: 'Koniec'
             }
         ],
         []
+    );
+
+    if (userRole === 'doctor') {
+        columns.push({
+            accessorKey: 'patient',
+            header: 'Pacient'
+        });
+    }
+    columns.push(
+        {
+            accessorKey: 'startTime',
+            header: 'Začiatok'
+        },
+        {
+            accessorKey: 'endTime',
+            header: 'Koniec'
+        }
     );
 
     return (
         <>
             <Box display="flex" py={1} pr={2} mb={2} ml={1}>
                 <Typography variant="h1" fontWeight="regular" color="text">
-                    Moje vyšetrenia
+                    {userRole === 'patient' ? 'Moje vyšetrenia' : 'Vyšetrenia'}
                 </Typography>
             </Box>
             {loading && (

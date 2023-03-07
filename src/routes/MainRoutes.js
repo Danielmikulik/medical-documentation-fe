@@ -7,6 +7,8 @@ import { Navigate } from 'react-router-dom';
 import Profile from '../pages/profile/profile';
 import Examinations from '../pages/examinations/examinations';
 import Prescriptions from '../pages/prescription/prescriptions';
+import AccessRequest from '../pages/accessRequest/accessRequest';
+import Attachments from '../pages/attachment/attachments';
 
 // render - dashboard
 const DashboardDefault = Loadable(lazy(() => import('pages/dashboard')));
@@ -54,11 +56,15 @@ const MainRoutes = {
                     children: [
                         {
                             path: 'patient_examinations',
-                            element: <Examinations />
+                            element: <Examinations userRole={'patient'} />
                         },
                         {
                             path: 'prescriptions',
                             element: <Prescriptions />
+                        },
+                        {
+                            path: 'access_request',
+                            element: <AccessRequest />
                         }
                     ]
                 },
@@ -67,9 +73,13 @@ const MainRoutes = {
                     children: [
                         {
                             path: 'doctor_examinations',
-                            element: <Examinations />
+                            element: <Examinations userRole={'doctor'} />
                         }
                     ]
+                },
+                {
+                    path: '/attachments/:examId',
+                    element: <Attachments />
                 },
                 {
                     path: 'shadow',
