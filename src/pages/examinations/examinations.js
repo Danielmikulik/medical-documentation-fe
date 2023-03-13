@@ -1,9 +1,10 @@
-import { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import ExaminationsTable from './examinationsTable';
 import { useCookies } from 'react-cookie';
 import api from '../../services/api';
 import { Box, Typography } from '@mui/material';
 import logError from '../../utils/errorHandler';
+import TooltipFetch from '../../components/Tooltip/TooltipFetch';
 
 const Examinations = ({ userRole }) => {
     const [cookies, setCookie] = useCookies(['userLogin', 'token']);
@@ -26,7 +27,12 @@ const Examinations = ({ userRole }) => {
             }
         )
             .then((res) => {
-                setData(res.data);
+                const processedData = res.data.map((row) => {
+                    let temp = Object.assign({}, row);
+                    temp.doctor = <TooltipFetch endpoint={`/api/doctor/${temp.doctorId}`} title={temp.doctor} />;
+                    return temp;
+                });
+                setData(processedData);
                 setError(null);
             })
             .catch(function (error) {

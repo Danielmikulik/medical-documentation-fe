@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useCookies } from 'react-cookie';
 import api from '../../services/api';
 import { Box, Typography } from '@mui/material';
@@ -7,6 +7,7 @@ import TextField from '@mui/material/TextField';
 import { Autocomplete } from '@mui/material';
 import { MRT_Localization_CS } from 'material-react-table/locales/cs';
 import logError from '../../utils/errorHandler';
+import TooltipFetch from '../../components/Tooltip/TooltipFetch';
 
 const Prescriptions = () => {
     const [cookies, setCookie] = useCookies(['userLogin', 'token']);
@@ -45,6 +46,7 @@ const Prescriptions = () => {
                     if (temp.retrievedAt === '01.01.0001 00:00') {
                         temp.retrievedAt = 'Nevybraný';
                     }
+                    temp.doctor = <TooltipFetch endpoint={`/api/doctor/${temp.doctorId}`} title={temp.doctor} />;
                     return temp;
                 });
                 setData(processedData);

@@ -3,11 +3,14 @@ import api from '../../../services/api';
 import MaterialReactTable from 'material-react-table';
 import { useCookies } from 'react-cookie';
 import { SnackbarProvider, useSnackbar } from 'notistack';
-import { Box, Button } from '@mui/material';
+import { Box, Button, Tooltip, tooltipClasses } from '@mui/material';
 import DoneIcon from '@mui/icons-material/Done';
 import Typography from '@mui/material/Typography';
 import logError from '../../../utils/errorHandler';
 import { MRT_Localization_CS } from 'material-react-table/locales/cs';
+import { Link } from 'react-router-dom';
+import { styled } from '@mui/material/styles';
+import TooltipFetch from '../../../components/Tooltip/TooltipFetch';
 
 function Access() {
     const [cookies, setCookie] = useCookies(['token']);
@@ -46,8 +49,13 @@ function Access() {
             }
         )
             .then((res) => {
-                setData(res.data.content);
-                console.log(JSON.stringify(columnFilters ?? []));
+                const processedData = res.data.content.map((row) => {
+                    let temp = Object.assign({}, row);
+                    temp.requestDoctor = <TooltipFetch endpoint={`/api/doctor/${temp.requestDoctorId}`} title={temp.requestDoctor} />;
+                    temp.examDoctor = <TooltipFetch endpoint={`/api/doctor/${temp.examDoctorId}`} title={temp.examDoctor} />;
+                    return temp;
+                });
+                setData(processedData);
                 setTotalRowCount(res.data.totalRows);
             })
             .catch(function (error) {
@@ -138,15 +146,19 @@ function Access() {
                     Zoznam žiadostí o prístup
                 </Typography>
             </Box>
-            <Button
-                variant="contained"
-                onClick={handleConfirm}
-                disabled={!Object.keys(rowSelection).length}
-                endIcon={<DoneIcon />}
-                sx={{ mb: 3 }}
-            >
-                Potvrdiť
-            </Button>
+            <Tooltip title="Vyberte žiadosti pre potvrdenie">
+                <span>
+                    <Button
+                        variant="contained"
+                        onClick={handleConfirm}
+                        disabled={!Object.keys(rowSelection).length}
+                        endIcon={<DoneIcon />}
+                        sx={{ mb: 3 }}
+                    >
+                        Potvrdiť
+                    </Button>
+                </span>
+            </Tooltip>
             <MaterialReactTable
                 columns={columns}
                 data={data}
