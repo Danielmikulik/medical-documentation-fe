@@ -1,54 +1,86 @@
-import React, { useState } from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TextField } from '@mui/material';
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import dayjs from 'dayjs';
-
-function createData(name, date) {
-    return { name, date };
-}
-
-const rows = [
-    createData('John Doe', new Date('2022-03-01')),
-    createData('Jane Smith', new Date('2022-03-02')),
-    createData('Bob Johnson', new Date('2022-03-03'))
-];
+import React, { useEffect, useMemo, useState } from 'react';
+import CreateAccessRequest from './createAccessRequest';
+import api from '../../services/api';
+import { useCookies } from 'react-cookie';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
+import MaterialReactTable from 'material-react-table';
+import { MRT_Localization_CS } from 'material-react-table/locales/cs';
+import logError from '../../utils/errorHandler';
 
 export default function AccessRequest() {
-    const [value, setValue] = useState(dayjs('2022-04-07'));
+    const [cookies, setCookie] = useCookies(['token']);
+
+    const [data, setData] = useState({});
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        api.get(`/api/access_request/show`, {
+            headers: {
+                Authorization: `Bearer ${cookies.token}`
+            }
+        })
+            .then((res) => {
+                setData(res.data);
+                setError(null);
+            })
+            .catch(function (error) {
+                setError(error.message);
+                setData(null);
+                logError(error);
+            })
+            .finally(() => {
+                setLoading(false);
+            });
+    }, []);
+
+    const columns = useMemo(
+        () => [
+            {
+                accessorKey: 'patientName',
+                header: 'Meno pacienta'
+            },
+            {
+                accessorKey: 'patientBirthNumber',
+                header: 'R.Č. pacienta'
+            },
+            {
+                accessorKey: 'department',
+                header: 'Oddelenie'
+            },
+            {
+                accessorKey: 'count',
+                header: 'Počet záznamov'
+            }
+        ],
+        []
+    );
 
     return (
-        <TableContainer component={Paper}>
-            <Table aria-label="simple table">
-                <TableHead>
-                    <TableRow>
-                        <TableCell>Name</TableCell>
-                        <TableCell align="center">Date</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {rows.map((row) => (
-                        <TableRow key={row.name}>
-                            <TableCell component="th" scope="row">
-                                {row.name}
-                            </TableCell>
-                            <TableCell align="center">
-                                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                    <DateTimePicker
-                                        renderInput={(props) => <TextField {...props} />}
-                                        label="DateTimePicker"
-                                        value={value}
-                                        onChange={(newValue) => {
-                                            setValue(newValue);
-                                        }}
-                                    />
-                                </LocalizationProvider>
-                            </TableCell>
-                        </TableRow>
-                    ))}
-                </TableBody>
-            </Table>
-        </TableContainer>
+        <Box>
+            <Box display="flex" py={1} pr={2} mb={2} ml={1}>
+                <Typography variant="h1" fontWeight="regular" color="text">
+                    Žiadosť o prístup
+                </Typography>
+            </Box>
+            <CreateAccessRequest />
+            <Box display="flex" py={1} pr={2} mb={2} mt={3} ml={1}>
+                <Typography variant="h1" fontWeight="regular" color="text">
+                    Moje žiadosti
+                </Typography>
+            </Box>
+            {loading && (
+                <Typography variant="button" fontWeight="regular" color="text">
+                    Načítavam údaje...
+                </Typography>
+            )}
+            {error && (
+                <Typography variant="button" fontWeight="regular" color="text">
+                    Nepodarilo sa načítať údaje...
+                </Typography>
+            )}
+            {data && <MaterialReactTable columns={columns} data={data} localization={MRT_Localization_CS} />}
+        </Box>
     );
 }

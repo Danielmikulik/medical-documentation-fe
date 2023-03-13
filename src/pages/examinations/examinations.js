@@ -3,6 +3,7 @@ import ExaminationsTable from './examinationsTable';
 import { useCookies } from 'react-cookie';
 import api from '../../services/api';
 import { Box, Typography } from '@mui/material';
+import logError from '../../utils/errorHandler';
 
 const Examinations = ({ userRole }) => {
     const [cookies, setCookie] = useCookies(['userLogin', 'token']);
@@ -31,16 +32,7 @@ const Examinations = ({ userRole }) => {
             .catch(function (error) {
                 setError(error.message);
                 setData(null);
-                if (error.response) {
-                    console.log(error.response.data);
-                    console.log(error.response.status);
-                    console.log(error.response.headers);
-                } else if (error.request) {
-                    console.log(error.request);
-                } else {
-                    console.log('Error', error.message);
-                }
-                console.log(error.config);
+                logError(error);
             })
             .finally(() => {
                 setLoading(false);

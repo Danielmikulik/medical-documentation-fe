@@ -15,6 +15,7 @@ const NavGroup = ({ item }) => {
     const [cookies, setCookie] = useCookies(['token']);
 
     const role = parseJwt(cookies.token)?.Authorities[0].authority.toLowerCase();
+    const department = parseJwt(cookies.token)?.department;
     const menu = useSelector((state) => state.menu);
     const { drawerOpen } = menu;
 
@@ -27,7 +28,10 @@ const NavGroup = ({ item }) => {
                     </Typography>
                 );
             case 'item':
-                return (!menuItem.role || menuItem.role === role) && <NavItem key={menuItem.id} item={menuItem} level={1} />;
+                return (
+                    (!menuItem.role || menuItem.role === role) &&
+                    (!menuItem.department || menuItem.department === department) && <NavItem key={menuItem.id} item={menuItem} level={1} />
+                );
             default:
                 return (
                     <Typography key={menuItem.id} variant="h6" color="error" align="center">

@@ -3,6 +3,7 @@ import { Box, Stack, Typography } from '@mui/material';
 import { useCookies } from 'react-cookie';
 import { useEffect, useState } from 'react';
 import api from '../../services/api';
+import logError from '../../utils/errorHandler';
 
 export default function DateRangeKeyValueCard({ keys, url }) {
     const [cookies, setCookie] = useCookies(['userLogin', 'token']);
@@ -30,16 +31,7 @@ export default function DateRangeKeyValueCard({ keys, url }) {
             .catch(function (error) {
                 setError(error.message);
                 setData(null);
-                if (error.response) {
-                    console.log(error.response.data);
-                    console.log(error.response.status);
-                    console.log(error.response.headers);
-                } else if (error.request) {
-                    console.log(error.request);
-                } else {
-                    console.log('Error', error.message);
-                }
-                console.log(error.config);
+                logError(error);
             })
             .finally(() => {
                 setLoading(false);

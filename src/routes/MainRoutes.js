@@ -1,5 +1,5 @@
 import { lazy } from 'react';
-import { ProtectRoutes, ProtectRoutesByRoles } from '../hooks/protectRoutes';
+import { ProtectRoutes, ProtectRoutesByDepartment, ProtectRoutesByRoles } from '../hooks/protectRoutes';
 // project import
 import Loadable from 'components/Loadable';
 import MainLayout from 'layout/MainLayout';
@@ -9,6 +9,7 @@ import Examinations from '../pages/examinations/examinations';
 import Prescriptions from '../pages/prescription/prescriptions';
 import AccessRequest from '../pages/accessRequest/accessRequest';
 import Attachments from '../pages/attachment/attachments';
+import AccessRequestConfirm from '../pages/accessRequest/confirm/accessRequestConfirm';
 
 // render - dashboard
 const DashboardDefault = Loadable(lazy(() => import('pages/dashboard')));
@@ -61,10 +62,6 @@ const MainRoutes = {
                         {
                             path: 'prescriptions',
                             element: <Prescriptions />
-                        },
-                        {
-                            path: 'access_request',
-                            element: <AccessRequest />
                         }
                     ]
                 },
@@ -74,6 +71,19 @@ const MainRoutes = {
                         {
                             path: 'doctor_examinations',
                             element: <Examinations userRole={'doctor'} />
+                        },
+                        {
+                            path: 'access_request',
+                            element: <AccessRequest />
+                        },
+                        {
+                            element: <ProtectRoutesByDepartment department={'Ambulancia všeobecného lekára'} />,
+                            children: [
+                                {
+                                    path: 'access_request_confirm',
+                                    element: <AccessRequestConfirm />
+                                }
+                            ]
                         }
                     ]
                 },

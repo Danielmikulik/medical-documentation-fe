@@ -6,6 +6,7 @@ import MaterialReactTable from 'material-react-table';
 import TextField from '@mui/material/TextField';
 import { Autocomplete } from '@mui/material';
 import { MRT_Localization_CS } from 'material-react-table/locales/cs';
+import logError from '../../utils/errorHandler';
 
 const Prescriptions = () => {
     const [cookies, setCookie] = useCookies(['userLogin', 'token']);
@@ -23,7 +24,6 @@ const Prescriptions = () => {
             }
         }).then((res) => {
             setMedications(res.data);
-            setError(null);
         });
     }, []);
 
@@ -53,16 +53,7 @@ const Prescriptions = () => {
             .catch(function (error) {
                 setError(error.message);
                 setData(null);
-                if (error.response) {
-                    console.log(error.response.data);
-                    console.log(error.response.status);
-                    console.log(error.response.headers);
-                } else if (error.request) {
-                    console.log(error.request);
-                } else {
-                    console.log('Error', error.message);
-                }
-                console.log(error.config);
+                logError(error);
             })
             .finally(() => {
                 setLoading(false);
@@ -109,7 +100,7 @@ const Prescriptions = () => {
 
             <Autocomplete
                 disablePortal
-                id="combo-box-demo"
+                id="medication_select"
                 options={medications}
                 sx={{ width: 300, marginBottom: 3 }}
                 onChange={(e, v) => setSelectValue(v)}

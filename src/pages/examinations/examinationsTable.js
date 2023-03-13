@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import MaterialReactTable from 'material-react-table';
+import { MRT_Localization_CS } from 'material-react-table/locales/cs';
 
 const ExaminationsTable = ({ columns, data }) => {
     const [rowSelection, setRowSelection] = useState({});
@@ -14,10 +15,11 @@ const ExaminationsTable = ({ columns, data }) => {
         <MaterialReactTable
             columns={columns}
             data={data}
+            localization={MRT_Localization_CS}
             enableRowSelection
             enableMultiRowSelection={false}
             getRowId={(row) => row.id}
-            onRowSelectionChange={setRowSelection} //connect internal row selection state to your own
+            onRowSelectionChange={setRowSelection}
             state={{ rowSelection }}
         />
     );

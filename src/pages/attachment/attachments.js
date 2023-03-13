@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 import api from '../../services/api';
 import { useCookies } from 'react-cookie';
 import Attachment from './attachment';
+import logError from '../../utils/errorHandler';
 
 // ==============================|| COMPONENTS - TYPOGRAPHY ||============================== //
 
@@ -33,16 +34,7 @@ export default function Attachments() {
             .catch(function (error) {
                 setError(error.message);
                 setData(null);
-                if (error.response) {
-                    console.log(error.response.data);
-                    console.log(error.response.status);
-                    console.log(error.response.headers);
-                } else if (error.request) {
-                    console.log(error.request);
-                } else {
-                    console.log('Error', error.message);
-                }
-                console.log(error.config);
+                logError(error);
             })
             .finally(() => {
                 setLoading(false);

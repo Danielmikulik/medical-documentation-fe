@@ -2,12 +2,14 @@
 import { DashboardOutlined } from '@ant-design/icons';
 import MonitorHeartIcon from '@mui/icons-material/MonitorHeart';
 import MedicationIcon from '@mui/icons-material/Medication';
+import LocalHospitalIcon from '@mui/icons-material/LocalHospital';
 
 // icons
 const icons = {
     DashboardOutlined,
     MonitorHeartIcon,
-    MedicationIcon
+    MedicationIcon,
+    LocalHospitalIcon
 };
 
 // ==============================|| MENU ITEMS - DASHBOARD ||============================== //
@@ -57,9 +59,19 @@ const dashboard = {
             title: 'Žiadosti o prístup',
             type: 'item',
             url: '/access_request',
-            icon: icons.MonitorHeartIcon,
+            icon: icons.LocalHospitalIcon,
             breadcrumbs: false,
-            role: 'patient'
+            role: 'doctor'
+        },
+        {
+            id: 'accessRequestConfirm',
+            title: 'Žiadosti na potvrdenie',
+            type: 'item',
+            url: '/access_request_confirm',
+            icon: icons.LocalHospitalIcon,
+            breadcrumbs: false,
+            role: 'doctor',
+            department: 'Ambulancia všeobecného lekára'
         }
     ]
 };

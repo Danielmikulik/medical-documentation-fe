@@ -21,3 +21,10 @@ export const ProtectRoutesByRoles = ({ allowedRoles }) => {
 
     return allowedRoles.includes(role) ? <Outlet /> : <Navigate to="/" exact />;
 };
+
+export const ProtectRoutesByDepartment = (allowedDepartment) => {
+    const { cookies } = useAuth();
+
+    const department = parseJwt(cookies.token)?.department;
+    return allowedDepartment.department === department ? <Outlet /> : <Navigate to="/" exact />;
+};
