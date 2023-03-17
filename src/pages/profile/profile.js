@@ -19,7 +19,7 @@ function Profile() {
                 <Stack spacing={3}>
                     <MainCard title="Informácie">
                         <Stack spacing={0.75} sx={{ mt: -1.5 }}>
-                            <ProfileInfo />
+                            <ProfileInfo url={`/api/user/${role}`} />
                         </Stack>
                     </MainCard>
                 </Stack>

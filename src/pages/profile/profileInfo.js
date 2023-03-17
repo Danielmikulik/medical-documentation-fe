@@ -1,13 +1,12 @@
 // material-ui
 import { Box, Stack, Typography } from '@mui/material';
-import PropTypes from 'prop-types';
 import { useCookies } from 'react-cookie';
 import { useEffect, useState } from 'react';
 import parseJwt from '../../utils/jwtUtil';
 import api from '../../services/api';
 import logError from '../../utils/errorHandler';
 
-function ProfileInfo() {
+export default function ProfileInfo({ url }) {
     const labels = [];
     const values = [];
 
@@ -17,11 +16,9 @@ function ProfileInfo() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    const role = parseJwt(cookies.token)?.Authorities[0].authority.toLowerCase();
-
     useEffect(() => {
         api.post(
-            `/api/user/${role}`,
+            url,
             {
                 userLogin: cookies.userLogin
             },
@@ -45,16 +42,26 @@ function ProfileInfo() {
             });
     }, []);
 
-    Object.keys(data).forEach((el) => labels.push(el));
-    Object.values(data).forEach((el) => values.push(el));
+    if (Array.isArray(data)) {
+        Object.keys(data).forEach((el) => labels.push(el));
+        Object.values(data).forEach((el) => values.push(el));
+    }
 
-    const renderItems = labels.map((label, key) => (
+    const renderObjectItems = labels.map((label, key) => (
         <Box key={label} display="flex" py={1} pr={2}>
             <Typography variant="body1" fontWeight="bold">
                 {label}: &nbsp;
             </Typography>
             {!Array.isArray(values[key]) && renderSingleValue(values[key])}
             {Array.isArray(values[key]) && <Stack spacing={0.75}>{renderArray(values[key])}</Stack>}
+        </Box>
+    ));
+
+    const renderArrayItems = data.map((row) => (
+        <Box key={row} display="flex" py={1} pr={2}>
+            <Typography variant="body1" fontWeight="bold">
+                {row}
+            </Typography>
         </Box>
     ));
 
@@ -70,7 +77,8 @@ function ProfileInfo() {
                     Nepodarilo sa načítať údaje...
                 </Typography>
             )}
-            {data && renderItems}
+            {data && Array.isArray(data) && renderObjectItems}
+            {data && !Array.isArray(data) && renderArrayItems}
         </>
     );
 }
@@ -90,5 +98,3 @@ function renderArray(array) {
         </Typography>
     ));
 }
-
-export default ProfileInfo;

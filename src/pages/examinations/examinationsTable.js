@@ -7,7 +7,6 @@ const ExaminationsTable = ({ columns, data }) => {
 
     useEffect(() => {
         const attachmentId = Object.keys(rowSelection)[0];
-        console.log(attachmentId);
         attachmentId && window.open(`/attachments/${attachmentId}`, '_blank');
     }, [rowSelection]);
 

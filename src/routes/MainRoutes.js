@@ -10,6 +10,7 @@ import Prescriptions from '../pages/prescription/prescriptions';
 import AccessRequest from '../pages/accessRequest/accessRequest';
 import Attachments from '../pages/attachment/attachments';
 import AccessRequestConfirm from '../pages/accessRequest/confirm/accessRequestConfirm';
+import CreateMedicalExamination from '../pages/examinations/createMedicalExamination';
 
 // render - dashboard
 const DashboardDefault = Loadable(lazy(() => import('pages/dashboard')));
@@ -75,6 +76,10 @@ const MainRoutes = {
                         {
                             path: 'access_request',
                             element: <AccessRequest />
+                        },
+                        {
+                            path: 'create_examination',
+                            element: <CreateMedicalExamination />
                         },
                         {
                             element: <ProtectRoutesByDepartment department={'Ambulancia všeobecného lekára'} />,

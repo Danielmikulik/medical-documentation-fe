@@ -3,13 +3,11 @@ import api from '../../../services/api';
 import MaterialReactTable from 'material-react-table';
 import { useCookies } from 'react-cookie';
 import { SnackbarProvider, useSnackbar } from 'notistack';
-import { Box, Button, Tooltip, tooltipClasses } from '@mui/material';
+import { Box, Button, Tooltip } from '@mui/material';
 import DoneIcon from '@mui/icons-material/Done';
 import Typography from '@mui/material/Typography';
 import logError from '../../../utils/errorHandler';
 import { MRT_Localization_CS } from 'material-react-table/locales/cs';
-import { Link } from 'react-router-dom';
-import { styled } from '@mui/material/styles';
 import TooltipFetch from '../../../components/Tooltip/TooltipFetch';
 
 function Access() {
@@ -23,6 +21,7 @@ function Access() {
     const [isError, setIsError] = useState(false);
     const [isRefetching, setIsRefetching] = useState(false);
     const [totalRowCount, setTotalRowCount] = useState(0);
+    const [totalPageCount, setTotalPageCount] = useState(0);
 
     //table state
     const [rowSelection, setRowSelection] = useState({});
@@ -33,6 +32,10 @@ function Access() {
     });
 
     useEffect(() => {
+        loadData();
+    }, [pagination, columnFilters]);
+
+    function loadData() {
         if (!data.length) {
             setIsLoading(true);
         } else {
@@ -57,6 +60,7 @@ function Access() {
                 });
                 setData(processedData);
                 setTotalRowCount(res.data.totalRows);
+                setTotalPageCount(res.data.totalPages);
             })
             .catch(function (error) {
                 setIsError(true);
@@ -68,7 +72,7 @@ function Access() {
                 setIsLoading(false);
                 setIsRefetching(false);
             });
-    }, [pagination, columnFilters]);
+    }
 
     function handleConfirm() {
         const ids = Object.keys(rowSelection).map(Number);
@@ -98,6 +102,8 @@ function Access() {
                         ? `${successCount} žiadosti boli úspešne schválené`
                         : `${successCount} žiadostí bolo úspešne schválených.`;
                 enqueueSnackbar(message, { variant: 'success' });
+                loadData();
+                setRowSelection({});
             })
             .catch(function (error) {
                 enqueueSnackbar('Nepodarilo sa schváliť žiadosť.', { variant: 'error' });
@@ -167,6 +173,7 @@ function Access() {
                 getRowId={(row) => row.id}
                 onRowSelectionChange={setRowSelection}
                 rowCount={totalRowCount}
+                pageCount={totalPageCount}
                 manualPagination
                 manualFiltering
                 muiToolbarAlertBannerProps={

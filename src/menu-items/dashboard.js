@@ -3,13 +3,15 @@ import { DashboardOutlined } from '@ant-design/icons';
 import MonitorHeartIcon from '@mui/icons-material/MonitorHeart';
 import MedicationIcon from '@mui/icons-material/Medication';
 import LocalHospitalIcon from '@mui/icons-material/LocalHospital';
+import AddBoxIcon from '@mui/icons-material/AddBox';
 
 // icons
 const icons = {
     DashboardOutlined,
     MonitorHeartIcon,
     MedicationIcon,
-    LocalHospitalIcon
+    LocalHospitalIcon,
+    AddBoxIcon
 };
 
 // ==============================|| MENU ITEMS - DASHBOARD ||============================== //
@@ -42,6 +44,15 @@ const dashboard = {
             type: 'item',
             url: '/doctor_examinations',
             icon: icons.MonitorHeartIcon,
+            breadcrumbs: false,
+            role: 'doctor'
+        },
+        {
+            id: 'createExaminations',
+            title: 'Vyvoriť vyšetrenie',
+            type: 'item',
+            url: '/create_examination',
+            icon: icons.AddBoxIcon,
             breadcrumbs: false,
             role: 'doctor'
         },

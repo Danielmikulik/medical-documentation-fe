@@ -1,50 +1,78 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import ExaminationsTable from './examinationsTable';
 import { useCookies } from 'react-cookie';
 import api from '../../services/api';
-import { Box, Typography } from '@mui/material';
+import { Autocomplete, Box, Typography } from '@mui/material';
 import logError from '../../utils/errorHandler';
 import TooltipFetch from '../../components/Tooltip/TooltipFetch';
+import TextField from '@mui/material/TextField';
+import { MRT_Localization_CS } from 'material-react-table/locales/cs';
+import MaterialReactTable from 'material-react-table';
 
 const Examinations = ({ userRole }) => {
     const [cookies, setCookie] = useCookies(['userLogin', 'token']);
 
-    const [data, setData] = useState({});
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    //fetching state
+    const [isLoading, setIsLoading] = useState(true);
+    const [isError, setIsError] = useState(false);
+    const [isRefetching, setIsRefetching] = useState(false);
 
-    console.log(userRole);
+    //data
+    const [data, setData] = useState([]);
+    const [totalRowCount, setTotalRowCount] = useState(0);
+    const [totalPageCount, setTotalPageCount] = useState(0);
+    const [patients, setPatients] = useState([]);
+    const [selectValue, setSelectValue] = useState();
+
+    //table state
+    const [rowSelection, setRowSelection] = useState({});
+    const [pagination, setPagination] = useState({
+        pageIndex: 0,
+        pageSize: 5
+    });
+
     useEffect(() => {
-        api.post(
-            `/api/med_exams/${userRole}`,
-            {
-                userLogin: cookies.userLogin
-            },
-            {
-                headers: {
-                    Authorization: `Bearer ${cookies.token}`
-                }
+        api.get(`/api/med_exams/doctors_patients`, {
+            headers: {
+                Authorization: `Bearer ${cookies.token}`
             }
-        )
+        }).then((res) => {
+            setPatients(res.data);
+        });
+    }, []);
+
+    useEffect(() => {
+        const appendix = selectValue ? `&birthNumber=${selectValue.split(' ')[0]}` : '';
+        api.get(`/api/med_exams/${userRole}?pageIndex=${pagination.pageIndex}&pageSize=${pagination.pageSize}${appendix}`, {
+            headers: {
+                Authorization: `Bearer ${cookies.token}`
+            }
+        })
             .then((res) => {
-                const processedData = res.data.map((row) => {
+                const processedData = res.data.content.map((row) => {
                     let temp = Object.assign({}, row);
                     temp.doctor = <TooltipFetch endpoint={`/api/doctor/${temp.doctorId}`} title={temp.doctor} />;
                     return temp;
                 });
                 setData(processedData);
-                setError(null);
+                setTotalRowCount(res.data.totalRows);
+                setTotalPageCount(res.data.totalPages);
             })
             .catch(function (error) {
-                setError(error.message);
-                setData(null);
+                setIsError(true);
+                setIsLoading(false);
+                setIsRefetching(false);
                 logError(error);
             })
             .finally(() => {
-                setLoading(false);
+                setIsLoading(false);
+                setIsRefetching(false);
             });
-    }, []);
-    console.log(data);
+    }, [selectValue, pagination]);
+
+    useEffect(() => {
+        const attachmentId = Object.keys(rowSelection)[0];
+        attachmentId && window.open(`/attachments/${attachmentId}`, '_blank');
+    }, [rowSelection]);
 
     const columns = useMemo(
         () => [
@@ -88,17 +116,44 @@ const Examinations = ({ userRole }) => {
                     {userRole === 'patient' ? 'Moje vyšetrenia' : 'Vyšetrenia'}
                 </Typography>
             </Box>
-            {loading && (
-                <Typography variant="button" fontWeight="regular" color="text">
-                    Načítavam údaje...
-                </Typography>
+            {userRole === 'doctor' && (
+                <Autocomplete
+                    disablePortal
+                    id="patient_select"
+                    options={patients}
+                    sx={{ width: 300, marginBottom: 3 }}
+                    onChange={(e, v) => setSelectValue(v)}
+                    renderInput={(params) => <TextField {...params} label="Pacient" />}
+                />
             )}
-            {error && (
-                <Typography variant="button" fontWeight="regular" color="text">
-                    Nepodarilo sa načítať údaje...
-                </Typography>
-            )}
-            {data && <ExaminationsTable columns={columns} data={data} />}
+            <MaterialReactTable
+                columns={columns}
+                data={data}
+                localization={MRT_Localization_CS}
+                enableRowSelection
+                enableMultiRowSelection={false}
+                getRowId={(row) => row.id}
+                onRowSelectionChange={setRowSelection}
+                rowCount={totalRowCount}
+                pageCount={totalPageCount}
+                manualPagination
+                muiToolbarAlertBannerProps={
+                    isError
+                        ? {
+                              color: 'error',
+                              children: 'Nepodarilo sa načítať dáta'
+                          }
+                        : undefined
+                }
+                onPaginationChange={setPagination}
+                state={{
+                    pagination,
+                    showAlertBanner: isError,
+                    showProgressBars: isRefetching,
+                    isLoading,
+                    rowSelection
+                }}
+            />
         </>
     );
 };

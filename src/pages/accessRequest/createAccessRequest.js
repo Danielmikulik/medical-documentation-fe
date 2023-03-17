@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import TextField from '@mui/material/TextField';
-import { Autocomplete, Button, Snackbar } from '@mui/material';
+import { Autocomplete, Button } from '@mui/material';
 import Container from '@mui/material/Container';
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
@@ -48,8 +48,12 @@ function Access() {
     }, []);
 
     const sendRequest = async (patient, department, dateSince, dateUntil) => {
+        if (!patient || !department || !dateSince || !dateUntil) {
+            enqueueSnackbar(`Vyplňte všetky povinné polia`, { variant: 'error' });
+            return;
+        }
         enqueueSnackbar(`Odosielam žiadosť o sprístupnenie záznamov.`, { variant: 'info' });
-        const res = await api
+        await api
             .post(
                 '/api/access_request/create',
                 {
@@ -65,6 +69,10 @@ function Access() {
                 }
             )
             .then((res) => {
+                if (res.data === 0) {
+                    enqueueSnackbar('Nenašla sa žiadosť vyhovujúca zadaným kritériam', { variant: 'info' });
+                    return;
+                }
                 const message =
                     res.data === 1
                         ? '1 žiadosť bola úspešne vytvorená'
@@ -91,7 +99,7 @@ function Access() {
                 }}
             >
                 <Typography component="h1" variant="h5">
-                    Vytvorenie žiadosti
+                    Vytvoriť žiadosť
                 </Typography>
                 <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
                     <Autocomplete

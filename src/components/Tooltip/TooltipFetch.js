@@ -17,7 +17,6 @@ export default function TooltipFetch({ endpoint, title }) {
         }).then((res) => {
             const info = `Nemocnica: ${res.data.hospital}\n\nOddelenie: ${res.data.department}\n\nEmail: ${res.data.email}`;
             setData(info);
-            console.log(res.data);
             setIsFetching(false);
         });
     };
