@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import TextField from '@mui/material/TextField';
 import { Autocomplete, Button, Grid, Stack, Tooltip } from '@mui/material';
-import Container from '@mui/material/Container';
-import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import api from '../../services/api';
@@ -189,67 +187,6 @@ function Access() {
                 <Stack spacing={3}>{showPatientInfo && <PatientInfo patientBirthNumber={patientBirthNumber} />}</Stack>
             </Grid>
         </Grid>
-        // <Container component="main" maxWidth="xs">
-        //     <CssBaseline />
-        //     <Box
-        //         sx={{
-        //             marginTop: 8,
-        //             display: 'flex',
-        //             flexDirection: 'column',
-        //             alignItems: 'center'
-        //         }}
-        //     >
-        //         <Typography component="h1" variant="h5">
-        //             Vytvoriť žiadosť
-        //         </Typography>
-        //         <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-        //             <Autocomplete
-        //                 disablePortal
-        //                 options={patients}
-        //                 sx={{ mb: 2 }}
-        //                 fullWidth
-        //                 // onChange={(e, v) => setSelectValue(v)}
-        //                 renderInput={(params) => <TextField {...params} label="Pacient" id="patient" name="patient" required />}
-        //             />
-        //             <Autocomplete
-        //                 disablePortal
-        //                 options={departments}
-        //                 sx={{ mb: 2 }}
-        //                 fullWidth
-        //                 renderInput={(params) => <TextField {...params} label="Oddelenie" id="department" name="department" required />}
-        //             />
-        //             <TextField
-        //                 id="dateSince"
-        //                 name="dateSince"
-        //                 label="Záznamy od"
-        //                 type="date"
-        //                 margin={'normal'}
-        //                 defaultValue={new Date().toJSON().slice(0, 10)}
-        //                 fullWidth
-        //                 InputLabelProps={{
-        //                     shrink: true
-        //                 }}
-        //                 required
-        //             />
-        //             <TextField
-        //                 id="dateUntil"
-        //                 name="dateUntil"
-        //                 label="Sprístupniť do"
-        //                 type="date"
-        //                 margin={'normal'}
-        //                 defaultValue={new Date().toJSON().slice(0, 10)}
-        //                 fullWidth
-        //                 InputLabelProps={{
-        //                     shrink: true
-        //                 }}
-        //                 required
-        //             />
-        //             <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-        //                 Požiadať
-        //             </Button>
-        //         </Box>
-        //     </Box>
-        // </Container>
     );
 }
 

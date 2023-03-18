@@ -81,12 +81,16 @@ function Access() {
 
     function handleConfirm() {
         const ids = Object.keys(rowSelection).map(Number);
-        sendRequest(ids, 'confirm');
+        if (confirm('Naozaj chcete potvrdiť vybrané žiadosti?')) {
+            sendRequest(ids, 'confirm');
+        }
     }
 
     function handleReject() {
         const ids = Object.keys(rowSelection).map(Number);
-        sendRequest(ids, 'reject');
+        if (confirm('Naozaj chcete zamietnuť vybrané žiadosti?')) {
+            sendRequest(ids, 'reject');
+        }
     }
 
     const sendRequest = async (ids, action) => {
