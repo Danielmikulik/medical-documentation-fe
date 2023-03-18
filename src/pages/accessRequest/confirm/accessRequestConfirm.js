@@ -3,8 +3,9 @@ import api from '../../../services/api';
 import MaterialReactTable from 'material-react-table';
 import { useCookies } from 'react-cookie';
 import { SnackbarProvider, useSnackbar } from 'notistack';
-import { Box, Button, Tooltip } from '@mui/material';
+import { Box, Button, FormControlLabel, Switch, Tooltip } from '@mui/material';
 import DoneIcon from '@mui/icons-material/Done';
+import BlockIcon from '@mui/icons-material/Block';
 import Typography from '@mui/material/Typography';
 import logError from '../../../utils/errorHandler';
 import { MRT_Localization_CS } from 'material-react-table/locales/cs';
@@ -20,8 +21,8 @@ function Access() {
     const [isLoading, setIsLoading] = useState(true);
     const [isError, setIsError] = useState(false);
     const [isRefetching, setIsRefetching] = useState(false);
-    const [totalRowCount, setTotalRowCount] = useState(0);
-    const [totalPageCount, setTotalPageCount] = useState(0);
+
+    const [showRejected, setShowRejected] = React.useState(false);
 
     //table state
     const [rowSelection, setRowSelection] = useState({});
@@ -30,10 +31,12 @@ function Access() {
         pageIndex: 0,
         pageSize: 5
     });
+    const [totalRowCount, setTotalRowCount] = useState(0);
+    const [totalPageCount, setTotalPageCount] = useState(0);
 
     useEffect(() => {
         loadData();
-    }, [pagination, columnFilters]);
+    }, [pagination, columnFilters, showRejected]);
 
     function loadData() {
         if (!data.length) {
@@ -42,9 +45,11 @@ function Access() {
             setIsRefetching(true);
         }
         api.get(
-            `/api/access_request/show_confirm?pageIndex=${pagination.pageIndex}&pageSize=${pagination.pageSize}${
-                columnFilters ? '&' : ''
-            }${columnFilters.map((filter) => `${filter.id}=${filter.value}`).join('&')}`,
+            `/api/access_request/show_confirm?pageIndex=${pagination.pageIndex}&pageSize=${
+                pagination.pageSize
+            }&showRejected=${showRejected}${columnFilters ? '&' : ''}${columnFilters
+                .map((filter) => `${filter.id}=${filter.value}`)
+                .join('&')}`,
             {
                 headers: {
                     Authorization: `Bearer ${cookies.token}`
@@ -76,14 +81,19 @@ function Access() {
 
     function handleConfirm() {
         const ids = Object.keys(rowSelection).map(Number);
-        sendRequest(ids);
+        sendRequest(ids, 'confirm');
     }
 
-    const sendRequest = async (ids) => {
+    function handleReject() {
+        const ids = Object.keys(rowSelection).map(Number);
+        sendRequest(ids, 'reject');
+    }
+
+    const sendRequest = async (ids, action) => {
         enqueueSnackbar('Žiadosti na schválenie sa spracovávajú.', { variant: 'info' });
         await api
             .post(
-                '/api/access_request/confirm',
+                `/api/access_request/${action}`,
                 {
                     ids
                 },
@@ -95,18 +105,22 @@ function Access() {
             )
             .then((res) => {
                 const successCount = Number(res.data);
-                const message =
-                    successCount === 1
-                        ? '1 žiadosť bola úspešne schválená'
-                        : successCount > 1 && successCount < 5
-                        ? `${successCount} žiadosti boli úspešne schválené`
-                        : `${successCount} žiadostí bolo úspešne schválených.`;
-                enqueueSnackbar(message, { variant: 'success' });
+                if (successCount === 0) {
+                    enqueueSnackbar('Žiadna žiadosť nebola spracovaná.', { variant: 'info' });
+                } else {
+                    const message =
+                        successCount === 1
+                            ? '1 žiadosť bola úspešne spracovaná'
+                            : successCount > 1 && successCount < 5
+                            ? `${successCount} žiadosti boli úspešne spracované`
+                            : `${successCount} žiadostí bolo úspešne spracovaných.`;
+                    enqueueSnackbar(message, { variant: 'success' });
+                }
                 loadData();
                 setRowSelection({});
             })
             .catch(function (error) {
-                enqueueSnackbar('Nepodarilo sa schváliť žiadosť.', { variant: 'error' });
+                enqueueSnackbar('Nepodarilo sa spracovať žiadosť.', { variant: 'error' });
                 logError(error);
             });
     };
@@ -156,15 +170,32 @@ function Access() {
                 <span>
                     <Button
                         variant="contained"
+                        color={'success'}
                         onClick={handleConfirm}
                         disabled={!Object.keys(rowSelection).length}
                         endIcon={<DoneIcon />}
-                        sx={{ mb: 3 }}
+                        sx={{ mb: 3, mr: 2 }}
                     >
                         Potvrdiť
                     </Button>
+                    <Button
+                        variant="contained"
+                        color={'error'}
+                        onClick={handleReject}
+                        disabled={!Object.keys(rowSelection).length}
+                        endIcon={<BlockIcon />}
+                        sx={{ mb: 3, mr: 2 }}
+                    >
+                        Zamietnuť
+                    </Button>
                 </span>
             </Tooltip>
+            <FormControlLabel
+                control={<Switch checked={showRejected} onChange={(e, v) => setShowRejected(v)} />}
+                label="Zobraziť zamietnuté"
+                labelPlacement="right"
+                sx={{ mb: 3, mr: 2 }}
+            />
             <MaterialReactTable
                 columns={columns}
                 data={data}
