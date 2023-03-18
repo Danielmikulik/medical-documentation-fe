@@ -3,7 +3,7 @@ import { Grid, Stack } from '@mui/material';
 
 // project import
 import MainCard from 'components/MainCard';
-import ProfileInfo from './profileInfo';
+import KeyValueCard from './KeyValueCard';
 import DateRangeKeyValueCard from './dateRangeKeyValueCard';
 import { useCookies } from 'react-cookie';
 import parseJwt from '../../utils/jwtUtil';
@@ -19,7 +19,7 @@ function Profile() {
                 <Stack spacing={3}>
                     <MainCard title="Informácie">
                         <Stack spacing={0.75} sx={{ mt: -1.5 }}>
-                            <ProfileInfo url={`/api/user/${role}`} />
+                            <KeyValueCard url={`/api/user/${role}`} />
                         </Stack>
                     </MainCard>
                 </Stack>

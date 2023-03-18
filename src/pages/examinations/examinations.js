@@ -41,12 +41,19 @@ const Examinations = ({ userRole }) => {
     }, []);
 
     useEffect(() => {
-        const appendix = selectValue ? `&birthNumber=${selectValue.split(' ')[0]}` : '';
-        api.get(`/api/med_exams/${userRole}?pageIndex=${pagination.pageIndex}&pageSize=${pagination.pageSize}${appendix}`, {
-            headers: {
-                Authorization: `Bearer ${cookies.token}`
+        // const appendix = selectValue ? `&birthNumber=${selectValue.split(' ')[0]}` : '';
+        console.log(selectValue?.split(' ')[0]);
+        api.post(
+            `/api/med_exams/${userRole}?pageIndex=${pagination.pageIndex}&pageSize=${pagination.pageSize}`,
+            {
+                value: selectValue?.split(' ')[0]
+            },
+            {
+                headers: {
+                    Authorization: `Bearer ${cookies.token}`
+                }
             }
-        })
+        )
             .then((res) => {
                 const processedData = res.data.content.map((row) => {
                     let temp = Object.assign({}, row);

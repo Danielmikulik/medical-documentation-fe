@@ -6,35 +6,47 @@ import parseJwt from '../../utils/jwtUtil';
 import api from '../../services/api';
 import logError from '../../utils/errorHandler';
 
-export default function ProfileInfo({ url }) {
+export default function KeyValueCard({ url, patientBirthNumber }) {
     const labels = [];
     const values = [];
 
     const [cookies, setCookie] = useCookies(['userLogin', 'token']);
 
     const [data, setData] = useState({});
+    const [dataArray, setDataArray] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    const request = patientBirthNumber
+        ? api.post(
+              url,
+              {
+                  value: patientBirthNumber
+              },
+              {
+                  headers: {
+                      Authorization: `Bearer ${cookies.token}`
+                  }
+              }
+          )
+        : api.get(url, {
+              headers: {
+                  Authorization: `Bearer ${cookies.token}`
+              }
+          });
+
     useEffect(() => {
-        api.post(
-            url,
-            {
-                userLogin: cookies.userLogin
-            },
-            {
-                headers: {
-                    Authorization: `Bearer ${cookies.token}`
-                }
-            }
-        )
+        request
             .then((res) => {
-                setData(res.data);
+                if (Array.isArray(res.data)) {
+                    setDataArray(res.data);
+                } else {
+                    setData(res.data);
+                }
                 setError(null);
             })
             .catch(function (error) {
                 setError(error.message);
-                setData(null);
                 logError(error);
             })
             .finally(() => {
@@ -42,7 +54,7 @@ export default function ProfileInfo({ url }) {
             });
     }, []);
 
-    if (Array.isArray(data)) {
+    if (data) {
         Object.keys(data).forEach((el) => labels.push(el));
         Object.values(data).forEach((el) => values.push(el));
     }
@@ -57,9 +69,9 @@ export default function ProfileInfo({ url }) {
         </Box>
     ));
 
-    const renderArrayItems = data.map((row) => (
+    const renderArrayItems = dataArray.map((row) => (
         <Box key={row} display="flex" py={1} pr={2}>
-            <Typography variant="body1" fontWeight="bold">
+            <Typography variant="body1" fontWeight="regular">
                 {row}
             </Typography>
         </Box>
@@ -77,8 +89,8 @@ export default function ProfileInfo({ url }) {
                     Nepodarilo sa načítať údaje...
                 </Typography>
             )}
-            {data && Array.isArray(data) && renderObjectItems}
-            {data && !Array.isArray(data) && renderArrayItems}
+            {data && renderObjectItems}
+            {dataArray && renderArrayItems}
         </>
     );
 }

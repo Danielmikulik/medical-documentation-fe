@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import api from '../../services/api';
 import logError from '../../utils/errorHandler';
 
-export default function DateRangeKeyValueCard({ keys, url }) {
+export default function DateRangeKeyValueCard({ keys, url, patientBirthNumber }) {
     const [cookies, setCookie] = useCookies(['userLogin', 'token']);
 
     const [data, setData] = useState([]);
@@ -13,10 +13,11 @@ export default function DateRangeKeyValueCard({ keys, url }) {
     const [error, setError] = useState(null);
 
     useEffect(() => {
+        console.log('SOM TU');
         api.post(
             url,
             {
-                userLogin: cookies.userLogin
+                value: patientBirthNumber
             },
             {
                 headers: {
@@ -25,6 +26,7 @@ export default function DateRangeKeyValueCard({ keys, url }) {
             }
         )
             .then((res) => {
+                console.log('SOM TU');
                 setData(res.data);
                 setError(null);
             })
@@ -37,6 +39,7 @@ export default function DateRangeKeyValueCard({ keys, url }) {
                 setLoading(false);
             });
     }, []);
+    console.log(data);
 
     const renderItems = data.map((row) => (
         <Box key={row[keys[0]]} display="flex" py={1} pr={2}>

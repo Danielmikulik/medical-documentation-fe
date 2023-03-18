@@ -49,7 +49,7 @@ const dashboard = {
         },
         {
             id: 'createExaminations',
-            title: 'Vyvoriť vyšetrenie',
+            title: 'Vytvoriť vyšetrenie',
             type: 'item',
             url: '/create_examination',
             icon: icons.AddBoxIcon,
