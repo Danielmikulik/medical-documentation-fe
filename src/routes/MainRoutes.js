@@ -11,6 +11,7 @@ import AccessRequest from '../pages/accessRequest/accessRequest';
 import Attachments from '../pages/attachment/attachments';
 import AccessRequestConfirm from '../pages/accessRequest/confirm/accessRequestConfirm';
 import CreateMedicalExamination from '../pages/examinations/createMedicalExamination';
+import AddTypeEntry from '../pages/addForms/addTypeEntry';
 
 // render - dashboard
 const DashboardDefault = Loadable(lazy(() => import('pages/dashboard')));
@@ -63,6 +64,23 @@ const MainRoutes = {
                         {
                             path: 'prescriptions',
                             element: <Prescriptions />
+                        }
+                    ]
+                },
+                {
+                    element: <ProtectRoutesByRoles allowedRoles={['admin']} />,
+                    children: [
+                        {
+                            path: 'add_department_type',
+                            element: <AddTypeEntry url={'/api/department_type'} type={'oddelenie'} label={'Oddelenie'} />
+                        },
+                        {
+                            path: 'add_disease_type',
+                            element: <AddTypeEntry url={'/api/disease_type'} type={'chorobu'} label={'Choroba'} />
+                        },
+                        {
+                            path: 'add_examination_type',
+                            element: <AddTypeEntry url={'/api/examination_type'} type={'typ vyšetrenia'} label={'Typ vyšetrenia'} />
                         }
                     ]
                 },

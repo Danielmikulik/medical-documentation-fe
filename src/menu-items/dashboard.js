@@ -4,6 +4,7 @@ import MonitorHeartIcon from '@mui/icons-material/MonitorHeart';
 import MedicationIcon from '@mui/icons-material/Medication';
 import LocalHospitalIcon from '@mui/icons-material/LocalHospital';
 import AddBoxIcon from '@mui/icons-material/AddBox';
+import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined';
 
 // icons
 const icons = {
@@ -11,7 +12,8 @@ const icons = {
     MonitorHeartIcon,
     MedicationIcon,
     LocalHospitalIcon,
-    AddBoxIcon
+    AddBoxIcon,
+    AddBoxOutlinedIcon
 };
 
 // ==============================|| MENU ITEMS - DASHBOARD ||============================== //
@@ -83,6 +85,33 @@ const dashboard = {
             breadcrumbs: false,
             role: 'doctor',
             department: 'Ambulancia všeobecného lekára'
+        },
+        {
+            id: 'addDepartmentType',
+            title: 'Pridať oddelenie',
+            type: 'item',
+            url: '/add_department_type',
+            icon: icons.AddBoxOutlinedIcon,
+            breadcrumbs: false,
+            role: 'admin'
+        },
+        {
+            id: 'addDiseaseType',
+            title: 'Pridať chorobu',
+            type: 'item',
+            url: '/add_disease_type',
+            icon: icons.AddBoxOutlinedIcon,
+            breadcrumbs: false,
+            role: 'admin'
+        },
+        {
+            id: 'addExaminationType',
+            title: 'Pridať typ vyšetrenia',
+            type: 'item',
+            url: '/add_examination_type',
+            icon: icons.AddBoxOutlinedIcon,
+            breadcrumbs: false,
+            role: 'admin'
         }
     ]
 };
