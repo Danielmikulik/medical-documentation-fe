@@ -12,6 +12,7 @@ import Attachments from '../pages/attachment/attachments';
 import AccessRequestConfirm from '../pages/accessRequest/confirm/accessRequestConfirm';
 import CreateMedicalExamination from '../pages/examinations/createMedicalExamination';
 import AddTypeEntry from '../pages/addForms/addTypeEntry';
+import AddCity from '../pages/addForms/addCityForm';
 
 // render - dashboard
 const DashboardDefault = Loadable(lazy(() => import('pages/dashboard')));
@@ -85,10 +86,6 @@ const MainRoutes = {
                             )
                         },
                         {
-                            path: 'add_hospital',
-                            element: <AddTypeEntry url={'/api/hospital'} title={'Vytvoriť nemocnicu'} label={'Nemocnica'} />
-                        },
-                        {
                             path: 'add_health_insurance',
                             element: (
                                 <AddTypeEntry
@@ -97,6 +94,14 @@ const MainRoutes = {
                                     label={'Zdravotná poisťovňa'}
                                 />
                             )
+                        },
+                        {
+                            path: 'add_hospital',
+                            element: <AddTypeEntry url={'/api/hospital'} title={'Vytvoriť nemocnicu'} label={'Nemocnica'} />
+                        },
+                        {
+                            path: 'add_city',
+                            element: <AddCity />
                         }
                     ]
                 },

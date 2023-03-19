@@ -130,6 +130,15 @@ const dashboard = {
             icon: icons.AddBoxOutlinedIcon,
             breadcrumbs: false,
             role: 'admin'
+        },
+        {
+            id: 'addCity',
+            title: 'Pridať mesto',
+            type: 'item',
+            url: '/add_city',
+            icon: icons.AddBoxOutlinedIcon,
+            breadcrumbs: false,
+            role: 'admin'
         }
     ]
 };
