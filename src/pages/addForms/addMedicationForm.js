@@ -6,7 +6,7 @@ import { useCookies } from 'react-cookie';
 import { SnackbarProvider, useSnackbar } from 'notistack';
 import logError from '../../utils/errorHandler';
 
-function CreateCity() {
+function CreateMedication() {
     const [cookies, setCookie] = useCookies(['userLogin', 'token']);
 
     const { enqueueSnackbar } = useSnackbar();
@@ -15,22 +15,24 @@ function CreateCity() {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
         const name = data.get('name');
-        const zipCode = data.get('zipCode');
-        sendRequest(zipCode, name);
+        const amount = data.get('amount');
+        const unit = data.get('unit');
+        sendRequest(name, amount, unit);
     };
 
-    const sendRequest = async (zipCode, name) => {
-        if (!zipCode || !name) {
+    const sendRequest = async (name, amount, unit) => {
+        if (!name) {
             enqueueSnackbar(`Vyplňte všetky povinné polia`, { variant: 'error' });
             return;
         }
-        enqueueSnackbar(`Odosielam žiadosť o vytvorenie mesta.`, { variant: 'info' });
+        enqueueSnackbar(`Odosielam žiadosť o vytvorenie lieku.`, { variant: 'info' });
         await api
             .post(
-                '/api/city',
+                '/api/medication',
                 {
-                    zipCode: zipCode,
-                    name: name
+                    name: name,
+                    amount: amount,
+                    unit: unit
                 },
                 {
                     headers: {
@@ -42,7 +44,8 @@ function CreateCity() {
                 enqueueSnackbar('Nový záznam bol úspešne vytvorený', { variant: 'success' });
             })
             .catch(function (error) {
-                const message = error.response.status === 409 ? 'Mesto s daným PSČ už existuje.' : 'Nepodarilo sa vytvoriť daný záznam.';
+                const message =
+                    error.response.status === 409 ? 'Liek s daným názvom a množstvom už existuje.' : 'Nepodarilo sa vytvoriť daný záznam.';
                 enqueueSnackbar(message, { variant: 'error' });
                 logError(error);
             });
@@ -52,7 +55,7 @@ function CreateCity() {
         <Box>
             <Box display="flex" py={1} pr={2} mb={2} ml={1}>
                 <Typography variant="h1" fontWeight="regular" color="text">
-                    Pridať mesto
+                    Pridať liek
                 </Typography>
             </Box>
             <Container component="main" maxWidth="xs">
@@ -66,8 +69,9 @@ function CreateCity() {
                     }}
                 >
                     <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-                        <TextField label="psč" id="zipCode" name="zipCode" required fullWidth sx={{ mb: 2 }} />
-                        <TextField label="Názov mesta" id="name" name="name" required fullWidth />
+                        <TextField label="Názov mesta" id="name" name="name" required fullWidth sx={{ mb: 2 }} />
+                        <TextField type="number" label="Množstvo" id="amount" name="amount" fullWidth sx={{ mb: 2 }} />
+                        <TextField label="Jednotka" id="unit" name="unit" fullWidth />
                         <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
                             Vytvoriť
                         </Button>
@@ -78,10 +82,10 @@ function CreateCity() {
     );
 }
 
-export default function AddCityForm() {
+export default function AddMedicationForm() {
     return (
         <SnackbarProvider maxSnack={3} autoHideDuration={5000}>
-            <CreateCity />
+            <CreateMedication />
         </SnackbarProvider>
     );
 }

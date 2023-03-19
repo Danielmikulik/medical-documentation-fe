@@ -139,6 +139,15 @@ const dashboard = {
             icon: icons.AddBoxOutlinedIcon,
             breadcrumbs: false,
             role: 'admin'
+        },
+        {
+            id: 'addMedication',
+            title: 'Pridať liek',
+            type: 'item',
+            url: '/add_medication',
+            icon: icons.AddBoxOutlinedIcon,
+            breadcrumbs: false,
+            role: 'admin'
         }
     ]
 };

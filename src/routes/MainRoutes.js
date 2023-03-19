@@ -12,7 +12,8 @@ import Attachments from '../pages/attachment/attachments';
 import AccessRequestConfirm from '../pages/accessRequest/confirm/accessRequestConfirm';
 import CreateMedicalExamination from '../pages/examinations/createMedicalExamination';
 import AddTypeEntry from '../pages/addForms/addTypeEntry';
-import AddCity from '../pages/addForms/addCityForm';
+import AddCityForm from '../pages/addForms/addCityForm';
+import AddMedicationForm from '../pages/addForms/addMedicationForm';
 
 // render - dashboard
 const DashboardDefault = Loadable(lazy(() => import('pages/dashboard')));
@@ -101,7 +102,11 @@ const MainRoutes = {
                         },
                         {
                             path: 'add_city',
-                            element: <AddCity />
+                            element: <AddCityForm />
+                        },
+                        {
+                            path: 'add_medication',
+                            element: <AddMedicationForm />
                         }
                     ]
                 },
