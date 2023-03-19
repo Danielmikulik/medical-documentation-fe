@@ -6,7 +6,7 @@ import { useCookies } from 'react-cookie';
 import { SnackbarProvider, useSnackbar } from 'notistack';
 import logError from '../../utils/errorHandler';
 
-function AddType({ url, type, label }) {
+function AddType({ url, type: title, label }) {
     const [cookies, setCookie] = useCookies(['userLogin', 'token']);
 
     const { enqueueSnackbar } = useSnackbar();
@@ -51,7 +51,7 @@ function AddType({ url, type, label }) {
         <Box>
             <Box display="flex" py={1} pr={2} mb={2} ml={1}>
                 <Typography variant="h1" fontWeight="regular" color="text">
-                    {`Vytvoriť ${type}`}
+                    {title}
                 </Typography>
             </Box>
             <Container component="main" maxWidth="xs">
@@ -76,10 +76,10 @@ function AddType({ url, type, label }) {
     );
 }
 
-export default function AddTypeEntry({ url, type, label }) {
+export default function AddTypeEntry({ url, title, label }) {
     return (
         <SnackbarProvider maxSnack={3} autoHideDuration={5000}>
-            <AddType url={url} type={type} label={label} />
+            <AddType url={url} title={title} label={label} />
         </SnackbarProvider>
     );
 }

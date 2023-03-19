@@ -72,15 +72,31 @@ const MainRoutes = {
                     children: [
                         {
                             path: 'add_department_type',
-                            element: <AddTypeEntry url={'/api/department_type'} type={'oddelenie'} label={'Oddelenie'} />
+                            element: <AddTypeEntry url={'/api/department_type'} title={'Vytvoriť oddelenie'} label={'Oddelenie'} />
                         },
                         {
                             path: 'add_disease_type',
-                            element: <AddTypeEntry url={'/api/disease_type'} type={'chorobu'} label={'Choroba'} />
+                            element: <AddTypeEntry url={'/api/disease_type'} title={'Vytvoriť chorobu'} label={'Choroba'} />
                         },
                         {
                             path: 'add_examination_type',
-                            element: <AddTypeEntry url={'/api/examination_type'} type={'typ vyšetrenia'} label={'Typ vyšetrenia'} />
+                            element: (
+                                <AddTypeEntry url={'/api/examination_type'} title={'Vytvoriť typ vyšetrenia'} label={'Typ vyšetrenia'} />
+                            )
+                        },
+                        {
+                            path: 'add_hospital',
+                            element: <AddTypeEntry url={'/api/hospital'} title={'Vytvoriť nemocnicu'} label={'Nemocnica'} />
+                        },
+                        {
+                            path: 'add_health_insurance',
+                            element: (
+                                <AddTypeEntry
+                                    url={'/api/health_insurance'}
+                                    title={'Vytvoriť zdravotnú poisťovňu'}
+                                    label={'Zdravotná poisťovňa'}
+                                />
+                            )
                         }
                     ]
                 },

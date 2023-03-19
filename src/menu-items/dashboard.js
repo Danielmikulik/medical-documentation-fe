@@ -112,6 +112,24 @@ const dashboard = {
             icon: icons.AddBoxOutlinedIcon,
             breadcrumbs: false,
             role: 'admin'
+        },
+        {
+            id: 'addHospital',
+            title: 'Pridať nemocnicu',
+            type: 'item',
+            url: '/add_hospital',
+            icon: icons.AddBoxOutlinedIcon,
+            breadcrumbs: false,
+            role: 'admin'
+        },
+        {
+            id: 'addHealthInsurance',
+            title: 'Pridať zdravotnú poisťovňu',
+            type: 'item',
+            url: '/add_health_insurance',
+            icon: icons.AddBoxOutlinedIcon,
+            breadcrumbs: false,
+            role: 'admin'
         }
     ]
 };
