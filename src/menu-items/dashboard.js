@@ -88,7 +88,7 @@ const dashboard = {
         },
         {
             id: 'addDepartmentType',
-            title: 'Pridať oddelenie',
+            title: 'Pridať typ oddelenia',
             type: 'item',
             url: '/add_department_type',
             icon: icons.AddBoxOutlinedIcon,
@@ -145,6 +145,15 @@ const dashboard = {
             title: 'Pridať liek',
             type: 'item',
             url: '/add_medication',
+            icon: icons.AddBoxOutlinedIcon,
+            breadcrumbs: false,
+            role: 'admin'
+        },
+        {
+            id: 'addDepartment',
+            title: 'Pridať oddelenie',
+            type: 'item',
+            url: '/add_department',
             icon: icons.AddBoxOutlinedIcon,
             breadcrumbs: false,
             role: 'admin'

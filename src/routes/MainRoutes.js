@@ -14,6 +14,7 @@ import CreateMedicalExamination from '../pages/examinations/createMedicalExamina
 import AddTypeEntry from '../pages/addForms/addTypeEntry';
 import AddCityForm from '../pages/addForms/addCityForm';
 import AddMedicationForm from '../pages/addForms/addMedicationForm';
+import AddDepartmentForm from '../pages/addForms/addDepartmentForm';
 
 // render - dashboard
 const DashboardDefault = Loadable(lazy(() => import('pages/dashboard')));
@@ -74,17 +75,15 @@ const MainRoutes = {
                     children: [
                         {
                             path: 'add_department_type',
-                            element: <AddTypeEntry url={'/api/department_type'} title={'Vytvoriť oddelenie'} label={'Oddelenie'} />
+                            element: <AddTypeEntry url={'/api/department_type'} title={'Pridať typ oddelenie'} label={'Typ oddelenia'} />
                         },
                         {
                             path: 'add_disease_type',
-                            element: <AddTypeEntry url={'/api/disease_type'} title={'Vytvoriť chorobu'} label={'Choroba'} />
+                            element: <AddTypeEntry url={'/api/disease_type'} title={'Pridať chorobu'} label={'Choroba'} />
                         },
                         {
                             path: 'add_examination_type',
-                            element: (
-                                <AddTypeEntry url={'/api/examination_type'} title={'Vytvoriť typ vyšetrenia'} label={'Typ vyšetrenia'} />
-                            )
+                            element: <AddTypeEntry url={'/api/examination_type'} title={'Pridať typ vyšetrenia'} label={'Typ vyšetrenia'} />
                         },
                         {
                             path: 'add_health_insurance',
@@ -107,6 +106,10 @@ const MainRoutes = {
                         {
                             path: 'add_medication',
                             element: <AddMedicationForm />
+                        },
+                        {
+                            path: 'add_department',
+                            element: <AddDepartmentForm />
                         }
                     ]
                 },
