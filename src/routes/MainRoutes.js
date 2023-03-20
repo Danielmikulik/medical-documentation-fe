@@ -15,6 +15,7 @@ import AddTypeEntry from '../pages/addForms/addTypeEntry';
 import AddCityForm from '../pages/addForms/addCityForm';
 import AddMedicationForm from '../pages/addForms/addMedicationForm';
 import AddDepartmentForm from '../pages/addForms/addDepartmentForm';
+import CreatePrescription from '../pages/addForms/createPrescriptionForm';
 
 // render - dashboard
 const DashboardDefault = Loadable(lazy(() => import('pages/dashboard')));
@@ -127,6 +128,10 @@ const MainRoutes = {
                         {
                             path: 'create_examination',
                             element: <CreateMedicalExamination />
+                        },
+                        {
+                            path: 'create_prescription',
+                            element: <CreatePrescription />
                         },
                         {
                             element: <ProtectRoutesByDepartment department={'Ambulancia všeobecného lekára'} />,

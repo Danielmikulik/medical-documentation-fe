@@ -87,6 +87,15 @@ const dashboard = {
             department: 'Ambulancia všeobecného lekára'
         },
         {
+            id: 'createPrescription',
+            title: 'Vytvoriť recept',
+            type: 'item',
+            url: '/create_prescription',
+            icon: icons.AddBoxOutlinedIcon,
+            breadcrumbs: false,
+            role: 'doctor'
+        },
+        {
             id: 'addDepartmentType',
             title: 'Pridať typ oddelenia',
             type: 'item',

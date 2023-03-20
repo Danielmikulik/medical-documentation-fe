@@ -42,7 +42,7 @@ function Access() {
     }
 
     useEffect(() => {
-        api.get(`/api/med_exams/doctors_patients`, {
+        api.get(`/api/patient/doctors_patients`, {
             headers: {
                 Authorization: `Bearer ${cookies.token}`
             }
