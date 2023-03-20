@@ -177,6 +177,15 @@ const dashboard = {
             icon: icons.ChangeCircleOutlinedIcon,
             breadcrumbs: false,
             role: 'admin'
+        },
+        {
+            id: 'changePatientsHealthInsurance',
+            title: 'Zmena zdravotnej poisťovne',
+            type: 'item',
+            url: '/health_insurance_change',
+            icon: icons.ChangeCircleOutlinedIcon,
+            breadcrumbs: false,
+            role: 'admin'
         }
     ]
 };
