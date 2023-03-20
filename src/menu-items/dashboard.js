@@ -5,6 +5,7 @@ import MedicationIcon from '@mui/icons-material/Medication';
 import LocalHospitalIcon from '@mui/icons-material/LocalHospital';
 import AddBoxIcon from '@mui/icons-material/AddBox';
 import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined';
+import ChangeCircleOutlinedIcon from '@mui/icons-material/ChangeCircleOutlined';
 
 // icons
 const icons = {
@@ -13,7 +14,8 @@ const icons = {
     MedicationIcon,
     LocalHospitalIcon,
     AddBoxIcon,
-    AddBoxOutlinedIcon
+    AddBoxOutlinedIcon,
+    ChangeCircleOutlinedIcon
 };
 
 // ==============================|| MENU ITEMS - DASHBOARD ||============================== //
@@ -164,6 +166,15 @@ const dashboard = {
             type: 'item',
             url: '/add_department',
             icon: icons.AddBoxOutlinedIcon,
+            breadcrumbs: false,
+            role: 'admin'
+        },
+        {
+            id: 'changeDoctorsDepartment',
+            title: 'Zmena oddelenia',
+            type: 'item',
+            url: '/department_change',
+            icon: icons.ChangeCircleOutlinedIcon,
             breadcrumbs: false,
             role: 'admin'
         }

@@ -6,57 +6,70 @@ import { useCookies } from 'react-cookie';
 import { SnackbarProvider, useSnackbar } from 'notistack';
 import logError from '../../utils/errorHandler';
 
-function CreatePrescriptionForm() {
+function ChangeDoctorsDepartment() {
     const [cookies, setCookie] = useCookies(['userLogin', 'token']);
 
-    const [patients, setPatients] = useState([]);
-    const [medications, setMedications] = useState([]);
+    const [doctors, setDoctors] = useState([]);
+    const [hospitals, setHospitals] = useState([]);
+    const [departments, setDepartments] = useState([]);
 
     const { enqueueSnackbar } = useSnackbar();
 
     useEffect(() => {
-        api.get(`/api/patient/doctors_patients`, {
+        api.get(`/api/doctor/all`, {
             headers: {
                 Authorization: `Bearer ${cookies.token}`
             }
         }).then((res) => {
-            setPatients(res.data);
+            setDoctors(res.data);
         });
     }, []);
 
     useEffect(() => {
-        api.get(`/api/medication/all`, {
+        api.get(`/api/hospital/all`, {
             headers: {
                 Authorization: `Bearer ${cookies.token}`
             }
         }).then((res) => {
-            setMedications(res.data);
+            setHospitals(res.data);
+        });
+    }, []);
+
+    useEffect(() => {
+        api.get(`/api/department_type/all`, {
+            headers: {
+                Authorization: `Bearer ${cookies.token}`
+            }
+        }).then((res) => {
+            setDepartments(res.data);
         });
     }, []);
 
     const handleSubmit = (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-        const patient = data.get('patient')?.split(' ')[0];
-        const medicationString = data.get('medication')?.split(' ');
-        const medication = medicationString.slice(0, -2).join(' ');
-        const amount = data.get('amount');
-        sendRequest(patient, medication, amount);
+        const doctor = data.get('doctor')?.split(' ')[0];
+        const hospital = data.get('hospital');
+        const departmentType = data.get('departmentType');
+        sendRequest(doctor, hospital, departmentType);
     };
 
-    const sendRequest = async (patient, medication, amount) => {
-        if (!patient || !medication || !amount) {
+    const sendRequest = async (doctor, hospital, departmentType) => {
+        if (!doctor || !hospital || !departmentType) {
+            console.log(doctor);
+            console.log(hospital);
+            console.log(departmentType);
             enqueueSnackbar(`Vyplňte všetky povinné polia`, { variant: 'error' });
             return;
         }
-        enqueueSnackbar(`Odosielam žiadosť o vytvorenie receptu.`, { variant: 'info' });
+        enqueueSnackbar(`Odosielam žiadosť o zmenu oddelenia.`, { variant: 'info' });
         await api
             .post(
-                '/api/prescription',
+                '/api/doctor/department_change',
                 {
-                    patient: patient,
-                    medication: medication,
-                    amount: amount
+                    doctor: doctor,
+                    hospital: hospital,
+                    departmentType: departmentType
                 },
                 {
                     headers: {
@@ -65,10 +78,10 @@ function CreatePrescriptionForm() {
                 }
             )
             .then(() => {
-                enqueueSnackbar('Recept bol úspešne vytvorený', { variant: 'success' });
+                enqueueSnackbar('Oddelenie bolo úspešne zmenené', { variant: 'success' });
             })
             .catch(function (error) {
-                const message = 'Nepodarilo sa vytvoriť daný záznam.';
+                const message = error.response.status === 409 ? 'Doktor už pracuje na danom oddelení.' : 'Nepodarilo sa zmaniť oddelenie.';
                 enqueueSnackbar(message, { variant: 'error' });
                 logError(error);
             });
@@ -78,7 +91,7 @@ function CreatePrescriptionForm() {
         <Box>
             <Box display="flex" py={1} pr={2} mb={2} ml={1}>
                 <Typography variant="h1" fontWeight="regular" color="text">
-                    Pridať oddelenie
+                    Zmena oddelenia
                 </Typography>
             </Box>
             <Container component="main" maxWidth="xs">
@@ -94,21 +107,28 @@ function CreatePrescriptionForm() {
                     <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
                         <Autocomplete
                             disablePortal
-                            options={patients}
+                            options={doctors}
                             sx={{ mb: 2 }}
                             fullWidth
-                            renderInput={(params) => <TextField {...params} label="Pacient" id="patient" name="patient" required />}
+                            renderInput={(params) => <TextField {...params} label="Doktor" id="doctor" name="doctor" required />}
                         />
                         <Autocomplete
                             disablePortal
-                            options={medications}
-                            sx={{ mb: 2 }}
+                            options={hospitals}
+                            sx={{ width: 300, mb: 2 }}
                             fullWidth
-                            renderInput={(params) => <TextField {...params} label="Liek" id="medication" name="medication" required />}
+                            renderInput={(params) => <TextField {...params} label="Nemocnica" id="hospital" name="hospital" required />}
                         />
-                        <TextField type="number" label="Množstvo" id="amount" name="amount" fullWidth sx={{ mb: 2 }} required />
+                        <Autocomplete
+                            disablePortal
+                            options={departments}
+                            fullWidth
+                            renderInput={(params) => (
+                                <TextField {...params} label="Oddelenie" id="departmentType" name="departmentType" required />
+                            )}
+                        />
                         <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-                            Vytvoriť
+                            Zmeniť
                         </Button>
                     </Box>
                 </Box>
@@ -117,10 +137,10 @@ function CreatePrescriptionForm() {
     );
 }
 
-export default function CreatePrescription() {
+export default function DepartmentChange() {
     return (
         <SnackbarProvider maxSnack={3} autoHideDuration={5000}>
-            <CreatePrescriptionForm />
+            <ChangeDoctorsDepartment />
         </SnackbarProvider>
     );
 }

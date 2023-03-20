@@ -16,6 +16,7 @@ import AddCityForm from '../pages/addForms/addCityForm';
 import AddMedicationForm from '../pages/addForms/addMedicationForm';
 import AddDepartmentForm from '../pages/addForms/addDepartmentForm';
 import CreatePrescription from '../pages/addForms/createPrescriptionForm';
+import DepartmentChange from '../pages/addForms/departmentChange';
 
 // render - dashboard
 const DashboardDefault = Loadable(lazy(() => import('pages/dashboard')));
@@ -111,6 +112,10 @@ const MainRoutes = {
                         {
                             path: 'add_department',
                             element: <AddDepartmentForm />
+                        },
+                        {
+                            path: 'department_change',
+                            element: <DepartmentChange />
                         }
                     ]
                 },
