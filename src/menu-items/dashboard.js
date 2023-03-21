@@ -195,6 +195,24 @@ const dashboard = {
             icon: icons.AddBoxOutlinedIcon,
             breadcrumbs: false,
             role: 'admin'
+        },
+        {
+            id: 'addPatient',
+            title: 'Pridať pacienta',
+            type: 'item',
+            url: '/add_patient',
+            icon: icons.AddBoxOutlinedIcon,
+            breadcrumbs: false,
+            role: 'admin'
+        },
+        {
+            id: 'register',
+            title: 'Registrácia používateľa',
+            type: 'item',
+            url: '/register_user',
+            icon: icons.AddBoxOutlinedIcon,
+            breadcrumbs: false,
+            role: 'admin'
         }
     ]
 };
