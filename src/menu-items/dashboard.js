@@ -206,6 +206,15 @@ const dashboard = {
             role: 'admin'
         },
         {
+            id: 'addDoctor',
+            title: 'Pridať doktora',
+            type: 'item',
+            url: '/add_doctor',
+            icon: icons.AddBoxOutlinedIcon,
+            breadcrumbs: false,
+            role: 'admin'
+        },
+        {
             id: 'register',
             title: 'Registrácia používateľa',
             type: 'item',
