@@ -186,6 +186,15 @@ const dashboard = {
             icon: icons.ChangeCircleOutlinedIcon,
             breadcrumbs: false,
             role: 'admin'
+        },
+        {
+            id: 'addPerson',
+            title: 'Pridať osobu',
+            type: 'item',
+            url: '/add_person',
+            icon: icons.AddBoxOutlinedIcon,
+            breadcrumbs: false,
+            role: 'admin'
         }
     ]
 };

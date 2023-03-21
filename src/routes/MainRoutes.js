@@ -18,6 +18,7 @@ import AddDepartmentForm from '../pages/addForms/addDepartmentForm';
 import CreatePrescription from '../pages/addForms/createPrescriptionForm';
 import DepartmentChange from '../pages/addForms/departmentChange';
 import HealthInsuranceChange from '../pages/addForms/healthInsuranceChange';
+import AddPersonForm from '../pages/addForms/addPersonForm';
 
 // render - dashboard
 const DashboardDefault = Loadable(lazy(() => import('pages/dashboard')));
@@ -121,6 +122,10 @@ const MainRoutes = {
                         {
                             path: 'health_insurance_change',
                             element: <HealthInsuranceChange />
+                        },
+                        {
+                            path: 'add_person',
+                            element: <AddPersonForm />
                         }
                     ]
                 },

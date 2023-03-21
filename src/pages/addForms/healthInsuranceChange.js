@@ -66,7 +66,7 @@ function ChangePatientsInsurance() {
             })
             .catch(function (error) {
                 const message =
-                    error.response.status === 409 ? 'Pacient už je vedený v danej poisťovni.' : 'Nepodarilo sa zmaniť zdravotnú poisťovňu.';
+                    error.response.status === 409 ? 'Pacient už je vedený v danej poisťovni.' : 'Nepodarilo sa zmeniť zdravotnú poisťovňu.';
                 enqueueSnackbar(message, { variant: 'error' });
                 logError(error);
             });

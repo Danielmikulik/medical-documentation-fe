@@ -81,7 +81,7 @@ function ChangeDoctorsDepartment() {
                 enqueueSnackbar('Oddelenie bolo úspešne zmenené', { variant: 'success' });
             })
             .catch(function (error) {
-                const message = error.response.status === 409 ? 'Doktor už pracuje na danom oddelení.' : 'Nepodarilo sa zmaniť oddelenie.';
+                const message = error.response.status === 409 ? 'Doktor už pracuje na danom oddelení.' : 'Nepodarilo sa zmeniť oddelenie.';
                 enqueueSnackbar(message, { variant: 'error' });
                 logError(error);
             });
