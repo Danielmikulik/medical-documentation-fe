@@ -20,6 +20,7 @@ function MedicalExam() {
     const [diseaseTypes, setDiseaseTypes] = useState([]);
     const [patientBirthNumber, setPatientBirthNumber] = useState('');
     const [showPatientInfo, setShowPatientInfo] = useState(false);
+    const [file, setFile] = useState();
 
     const { enqueueSnackbar } = useSnackbar();
 
@@ -31,11 +32,43 @@ function MedicalExam() {
         const diseaseType = data.get('diseaseType');
         const startTime = data.get('startTime');
         const endTime = data.get('endTime');
+        const report = data.get('report');
+        const imageFile = file;
         if (!patient || !examinationType || !startTime || !endTime) {
             enqueueSnackbar(`Vyplňte všetky povinné polia`, { variant: 'error' });
             return;
         }
-        sendRequest(patient, examinationType, diseaseType, startTime, endTime);
+        sendRequest(patient, examinationType, diseaseType, startTime, endTime, report, imageFile);
+    };
+
+    const sendRequest = async (patient, examinationType, diseaseType, startTime, endTime, report, imageFile) => {
+        enqueueSnackbar(`Odosielam žiadosť o sprístupnenie záznamov.`, { variant: 'info' });
+        await api
+            .post(
+                '/api/med_exams/create',
+                {
+                    patient: patient,
+                    examinationType: examinationType,
+                    diseaseType: diseaseType,
+                    startTime: startTime,
+                    endTime: endTime,
+                    report: report,
+                    file: imageFile
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${cookies.token}`,
+                        'Content-Type': 'multipart/form-data'
+                    }
+                }
+            )
+            .then(() => {
+                enqueueSnackbar('Záznam z vyšetrenia bol úspešne vytvorený', { variant: 'success' });
+            })
+            .catch(function (error) {
+                enqueueSnackbar('Nepodarilo sa vytvoriť záznam z vyšetrenia.', { variant: 'error' });
+                logError(error);
+            });
     };
 
     useEffect(() => {
@@ -68,43 +101,19 @@ function MedicalExam() {
         });
     }, []);
 
-    const sendRequest = async (patient, examinationType, diseaseType, startTime, endTime) => {
-        enqueueSnackbar(`Odosielam žiadosť o sprístupnenie záznamov.`, { variant: 'info' });
-        await api
-            .post(
-                '/api/med_exams/create',
-                {
-                    patient: patient,
-                    examinationType: examinationType,
-                    diseaseType: diseaseType,
-                    startTime: startTime,
-                    endTime: endTime
-                },
-                {
-                    headers: {
-                        Authorization: `Bearer ${cookies.token}`
-                    }
-                }
-            )
-            .then(() => {
-                enqueueSnackbar('Záznam z vyšetrenia bol úspešne vytvorený', { variant: 'success' });
-            })
-            .catch(function (error) {
-                enqueueSnackbar('Nepodarilo sa vytvoriť záznam z vyšetrenia.', { variant: 'error' });
-                logError(error);
-            });
-    };
-
     function handlePatientOnChange(event, value) {
         const birthNumber = value?.split(' ')[0];
         setPatientBirthNumber(birthNumber);
-        console.log(birthNumber);
     }
 
     function handleShowPatientInfoClick() {
         const show = showPatientInfo;
         setShowPatientInfo(!show);
     }
+
+    const handleImageUpload = (event) => {
+        setFile(event.target.files[0]);
+    };
 
     return (
         <Box>
@@ -153,7 +162,13 @@ function MedicalExam() {
                                                 fullWidth
                                                 onInputChange={handlePatientOnChange}
                                                 renderInput={(params) => (
-                                                    <TextField {...params} label="Pacient" id="patient" name="patient" required />
+                                                    <TextField
+                                                        {...params}
+                                                        label="Rodné číslo pacienta"
+                                                        id="patient"
+                                                        name="patient"
+                                                        required
+                                                    />
                                                 )}
                                             />
                                             <Autocomplete
@@ -174,7 +189,7 @@ function MedicalExam() {
                                             <Autocomplete
                                                 disablePortal
                                                 options={diseaseTypes}
-                                                sx={{ mb: 2 }}
+                                                sx={{ mb: 1 }}
                                                 fullWidth
                                                 renderInput={(params) => (
                                                     <TextField {...params} label="Choroba" id="diseaseType" name="diseaseType" />
@@ -204,8 +219,32 @@ function MedicalExam() {
                                                 InputLabelProps={{
                                                     shrink: true
                                                 }}
+                                                sx={{ mb: 2 }}
                                                 required
                                             />
+                                            <TextField
+                                                label="Správa z vyšetrenia"
+                                                id="report"
+                                                name="report"
+                                                multiline
+                                                fullWidth
+                                                maxRows={6}
+                                                sx={{ mb: 2 }}
+                                            />
+                                            <input
+                                                accept="image/*"
+                                                style={{ display: 'none' }}
+                                                id="file"
+                                                name="file"
+                                                multiple
+                                                type="file"
+                                                onChange={handleImageUpload}
+                                            />
+                                            <label htmlFor="file">
+                                                <Button component="span" variant="outlined" fullWidth>
+                                                    Nahrať fotku
+                                                </Button>
+                                            </label>
                                             <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
                                                 Vytvoriť
                                             </Button>

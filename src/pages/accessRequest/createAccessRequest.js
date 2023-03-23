@@ -138,7 +138,9 @@ function Access() {
                                     sx={{ mb: 2 }}
                                     fullWidth
                                     onInputChange={handlePatientOnChange}
-                                    renderInput={(params) => <TextField {...params} label="Pacient" id="patient" name="patient" required />}
+                                    renderInput={(params) => (
+                                        <TextField {...params} label="Rodné číslo pacienta" id="patient" name="patient" required />
+                                    )}
                                 />
                                 <Autocomplete
                                     disablePortal

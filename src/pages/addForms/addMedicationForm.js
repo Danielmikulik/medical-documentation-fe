@@ -69,7 +69,7 @@ function CreateMedication() {
                     }}
                 >
                     <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-                        <TextField label="Názov mesta" id="name" name="name" required fullWidth sx={{ mb: 2 }} />
+                        <TextField label="Názov lieku" id="name" name="name" required fullWidth sx={{ mb: 2 }} />
                         <TextField type="number" label="Množstvo" id="amount" name="amount" fullWidth sx={{ mb: 2 }} />
                         <TextField label="Jednotka" id="unit" name="unit" fullWidth />
                         <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>

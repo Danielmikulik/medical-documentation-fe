@@ -17,7 +17,6 @@ export default function PatientInfo({ patientBirthNumber }) {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        console.log('SOM TU');
         api.post(
             '/api/patient/name',
             {

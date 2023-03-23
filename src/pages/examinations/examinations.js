@@ -41,8 +41,6 @@ const Examinations = ({ userRole }) => {
     }, []);
 
     useEffect(() => {
-        // const appendix = selectValue ? `&birthNumber=${selectValue.split(' ')[0]}` : '';
-        console.log(selectValue?.split(' ')[0]);
         api.post(
             `/api/med_exams/${userRole}?pageIndex=${pagination.pageIndex}&pageSize=${pagination.pageSize}`,
             {

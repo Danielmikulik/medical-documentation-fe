@@ -13,7 +13,6 @@ export default function DateRangeKeyValueCard({ keys, url, patientBirthNumber })
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        console.log('SOM TU');
         api.post(
             url,
             {
@@ -26,7 +25,6 @@ export default function DateRangeKeyValueCard({ keys, url, patientBirthNumber })
             }
         )
             .then((res) => {
-                console.log('SOM TU');
                 setData(res.data);
                 setError(null);
             })
@@ -39,7 +37,6 @@ export default function DateRangeKeyValueCard({ keys, url, patientBirthNumber })
                 setLoading(false);
             });
     }, []);
-    console.log(data);
 
     const renderItems = data.map((row) => (
         <Box key={row[keys[0]]} display="flex" py={1} pr={2}>
