@@ -28,3 +28,18 @@ export const ProtectRoutesByDepartment = (allowedDepartment) => {
     const department = parseJwt(cookies.token)?.department;
     return allowedDepartment.department === department ? <Outlet /> : <Navigate to="/" exact />;
 };
+
+export function ProtectDashboardByRoles() {
+    const { cookies } = useAuth();
+
+    const role = parseJwt(cookies.token)?.Authorities[0].authority;
+
+    switch (role) {
+        case 'DOCTOR':
+            return <Navigate to="/home_doctor" exact />;
+        case 'PATIENT':
+            return <Navigate to="/home_patient" exact />;
+        case 'ADMIN':
+            return <Navigate to="/home_default" exact />;
+    }
+}

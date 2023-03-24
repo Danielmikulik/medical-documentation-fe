@@ -31,27 +31,39 @@ const Examinations = ({ userRole }) => {
     });
 
     useEffect(() => {
-        api.get(`/api/patient/doctors_patients`, {
-            headers: {
-                Authorization: `Bearer ${cookies.token}`
-            }
-        }).then((res) => {
-            setPatients(res.data);
-        });
+        userRole === 'doctor' &&
+            api
+                .get(`/api/patient/doctors_patients`, {
+                    headers: {
+                        Authorization: `Bearer ${cookies.token}`
+                    }
+                })
+                .then((res) => {
+                    setPatients(res.data);
+                });
     }, []);
 
     useEffect(() => {
-        api.post(
-            `/api/med_exams/${userRole}?pageIndex=${pagination.pageIndex}&pageSize=${pagination.pageSize}`,
-            {
-                value: selectValue?.split(' ')[0]
-            },
-            {
-                headers: {
-                    Authorization: `Bearer ${cookies.token}`
-                }
-            }
-        )
+        const request =
+            userRole === 'doctor'
+                ? api.post(
+                      `/api/med_exams/${userRole}?pageIndex=${pagination.pageIndex}&pageSize=${pagination.pageSize}`,
+                      {
+                          value: selectValue?.split(' ')[0]
+                      },
+                      {
+                          headers: {
+                              Authorization: `Bearer ${cookies.token}`
+                          }
+                      }
+                  )
+                : api.get(`/api/med_exams/${userRole}?pageIndex=${pagination.pageIndex}&pageSize=${pagination.pageSize}`, {
+                      headers: {
+                          Authorization: `Bearer ${cookies.token}`
+                      }
+                  });
+
+        request
             .then((res) => {
                 const processedData = res.data.content.map((row) => {
                     let temp = Object.assign({}, row);

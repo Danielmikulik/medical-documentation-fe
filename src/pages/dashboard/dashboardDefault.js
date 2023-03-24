@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 // material-ui
 import {
@@ -20,12 +20,12 @@ import {
 
 // project import
 import OrdersTable from './OrdersTable';
-import IncomeAreaChart from './IncomeAreaChart';
+import ExamCountAreaChart from './ExamCountAreaChart';
 import MonthlyBarChart from './MonthlyBarChart';
 import ReportAreaChart from './ReportAreaChart';
 import SalesColumnChart from './SalesColumnChart';
 import MainCard from 'components/MainCard';
-import AnalyticEcommerce from 'components/cards/statistics/AnalyticEcommerce';
+import DashboardCard from 'components/cards/statistics/DashboardCard';
 
 // assets
 import { GiftOutlined, MessageOutlined, SettingOutlined } from '@ant-design/icons';
@@ -33,6 +33,8 @@ import avatar1 from 'assets/images/users/avatar-1.png';
 import avatar2 from 'assets/images/users/avatar-2.png';
 import avatar3 from 'assets/images/users/avatar-3.png';
 import avatar4 from 'assets/images/users/avatar-4.png';
+import api from '../../services/api';
+import { useCookies } from 'react-cookie';
 
 // avatar style
 const avatarSX = {
@@ -69,9 +71,22 @@ const status = [
 
 // ==============================|| DASHBOARD - DEFAULT ||============================== //
 
-const DashboardDefault = () => {
+export default function DashboardDefault() {
+    // const [cookies, setCookie] = useCookies(['userLogin', 'token']);
+
     const [value, setValue] = useState('today');
     const [slot, setSlot] = useState('week');
+    // const [patientCount, setPatientCount] = useState('0');
+    //
+    // useEffect(() => {
+    //     api.get(`/api/doctor/patient_count`, {
+    //         headers: {
+    //             Authorization: `Bearer ${cookies.token}`
+    //         }
+    //     }).then((res) => {
+    //         setPatientCount(res.data.toString());
+    //     });
+    // }, []);
 
     return (
         <Grid container rowSpacing={4.5} columnSpacing={2.75}>
@@ -79,17 +94,17 @@ const DashboardDefault = () => {
             <Grid item xs={12} sx={{ mb: -2.25 }}>
                 <Typography variant="h5">Dashboard</Typography>
             </Grid>
+            {/*<Grid item xs={12} sm={6} md={4} lg={3}>*/}
+            {/*    <DashboardCard title="Počet pacientov" count={patientCount} />*/}
+            {/*</Grid>*/}
             <Grid item xs={12} sm={6} md={4} lg={3}>
-                <AnalyticEcommerce title="Total Page Views" count="4,42,236" percentage={59.3} extra="35,000" />
+                <DashboardCard title="Total Users" count="78,250" percentage={70.5} extra="8,900" />
             </Grid>
             <Grid item xs={12} sm={6} md={4} lg={3}>
-                <AnalyticEcommerce title="Total Users" count="78,250" percentage={70.5} extra="8,900" />
+                <DashboardCard title="Total Order" count="18,800" percentage={27.4} isLoss color="warning" extra="1,943" />
             </Grid>
             <Grid item xs={12} sm={6} md={4} lg={3}>
-                <AnalyticEcommerce title="Total Order" count="18,800" percentage={27.4} isLoss color="warning" extra="1,943" />
-            </Grid>
-            <Grid item xs={12} sm={6} md={4} lg={3}>
-                <AnalyticEcommerce title="Total Sales" count="$35,078" percentage={27.4} isLoss color="warning" extra="$20,395" />
+                <DashboardCard title="Total Sales" count="$35,078" percentage={27.4} isLoss color="warning" extra="$20,395" />
             </Grid>
 
             <Grid item md={8} sx={{ display: { sm: 'none', md: 'block', lg: 'none' } }} />
@@ -123,7 +138,7 @@ const DashboardDefault = () => {
                 </Grid>
                 <MainCard content={false} sx={{ mt: 1.5 }}>
                     <Box sx={{ pt: 1, pr: 2 }}>
-                        <IncomeAreaChart slot={slot} />
+                        <ExamCountAreaChart slot={slot} />
                     </Box>
                 </MainCard>
             </Grid>
@@ -342,6 +357,4 @@ const DashboardDefault = () => {
             </Grid>
         </Grid>
     );
-};
-
-export default DashboardDefault;
+}

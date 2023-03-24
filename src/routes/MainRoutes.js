@@ -1,5 +1,5 @@
 import { lazy } from 'react';
-import { ProtectRoutes, ProtectRoutesByDepartment, ProtectRoutesByRoles } from '../hooks/protectRoutes';
+import { ProtectDashboardByRoles, ProtectRoutes, ProtectRoutesByDepartment, ProtectRoutesByRoles } from '../hooks/protectRoutes';
 // project import
 import Loadable from 'components/Loadable';
 import MainLayout from 'layout/MainLayout';
@@ -22,9 +22,11 @@ import AddPersonForm from '../pages/addForms/addPersonForm';
 import AddPatientForm from '../pages/addForms/addPatientForm';
 import RegisterUserForm from '../pages/addForms/registerUserForm';
 import AddDoctorForm from '../pages/addForms/addDoctorForm';
+import DashboardPatient from '../pages/dashboard/dashboardPatient';
+import DashboardDoctor from '../pages/dashboard/dashboardDoctor';
 
 // render - dashboard
-const DashboardDefault = Loadable(lazy(() => import('pages/dashboard')));
+const DashboardDefault = Loadable(lazy(() => import('pages/dashboard/dashboardDefault')));
 
 // render - sample page
 const SamplePage = Loadable(lazy(() => import('pages/extra-pages/SamplePage')));
@@ -54,11 +56,23 @@ const MainRoutes = {
                 },
                 {
                     path: 'home',
-                    element: <DashboardDefault />
+                    element: <ProtectDashboardByRoles />
                 },
                 {
                     path: 'sample-page',
                     element: <SamplePage />
+                },
+                {
+                    path: 'home_default',
+                    element: <DashboardDefault />
+                },
+                {
+                    path: 'home_patient',
+                    element: <DashboardPatient />
+                },
+                {
+                    path: 'home_doctor',
+                    element: <DashboardDoctor />
                 },
                 {
                     path: 'profile',

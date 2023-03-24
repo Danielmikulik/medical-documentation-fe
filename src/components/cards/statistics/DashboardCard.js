@@ -11,7 +11,7 @@ import { RiseOutlined, FallOutlined } from '@ant-design/icons';
 
 // ==============================|| STATISTICS - ECOMMERCE CARD  ||============================== //
 
-const AnalyticEcommerce = ({ color, title, count, percentage, isLoss, extra }) => (
+const DashboardCard = ({ color, title, count, percentage, isLoss, extra }) => (
     <MainCard contentSX={{ p: 2.25 }}>
         <Stack spacing={0.5}>
             <Typography variant="h6" color="textSecondary">
@@ -43,18 +43,20 @@ const AnalyticEcommerce = ({ color, title, count, percentage, isLoss, extra }) =
             </Grid>
         </Stack>
         <Box sx={{ pt: 2.25 }}>
-            <Typography variant="caption" color="textSecondary">
-                You made an extra{' '}
-                <Typography component="span" variant="caption" sx={{ color: `${color || 'primary'}.main` }}>
-                    {extra}
-                </Typography>{' '}
-                this year
-            </Typography>
+            {extra && (
+                <Typography variant="caption" color="textSecondary">
+                    You made an extra{' '}
+                    <Typography component="span" variant="caption" sx={{ color: `${color || 'primary'}.main` }}>
+                        {extra}
+                    </Typography>{' '}
+                    this year
+                </Typography>
+            )}
         </Box>
     </MainCard>
 );
 
-AnalyticEcommerce.propTypes = {
+DashboardCard.propTypes = {
     color: PropTypes.string,
     title: PropTypes.string,
     count: PropTypes.string,
@@ -63,8 +65,8 @@ AnalyticEcommerce.propTypes = {
     extra: PropTypes.oneOfType([PropTypes.node, PropTypes.string])
 };
 
-AnalyticEcommerce.defaultProps = {
+DashboardCard.defaultProps = {
     color: 'primary'
 };
 
-export default AnalyticEcommerce;
+export default DashboardCard;
