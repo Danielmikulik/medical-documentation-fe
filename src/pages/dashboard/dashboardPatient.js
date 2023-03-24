@@ -77,6 +77,7 @@ export default function DashboardPatient() {
     const [value, setValue] = useState('today');
     const [slot, setSlot] = useState('week');
     const [doctorCount, setDoctorCount] = useState('0');
+    const [totalExamCount, setTotalExamCount] = useState('0');
     const [examCounts, setExamCounts] = useState();
 
     useEffect(() => {
@@ -99,6 +100,16 @@ export default function DashboardPatient() {
         });
     }, []);
 
+    useEffect(() => {
+        api.get(`/api/med_exams/patient_total_exam_count`, {
+            headers: {
+                Authorization: `Bearer ${cookies.token}`
+            }
+        }).then((res) => {
+            setTotalExamCount(res.data);
+        });
+    }, []);
+
     return (
         <Grid container rowSpacing={4.5} columnSpacing={2.75}>
             {/* row 1 */}
@@ -109,10 +120,10 @@ export default function DashboardPatient() {
                 <DashboardCard title="Počet navštívených doktorov" count={doctorCount} />
             </Grid>
             <Grid item xs={12} sm={6} md={4} lg={3}>
-                <DashboardCard title="Total Users" count="78,250" percentage={70.5} extra="8,900" />
+                <DashboardCard title="Celkový počet absolvovaných vyšetrení" count={totalExamCount} />
             </Grid>
             <Grid item xs={12} sm={6} md={4} lg={3}>
-                <DashboardCard title="Total Order" count="18,800" percentage={27.4} isLoss color="warning" extra="1,943" />
+                <DashboardCard title="Total Users" count="78,250" percentage={70.5} extra="8,900" />
             </Grid>
             <Grid item xs={12} sm={6} md={4} lg={3}>
                 <DashboardCard title="Total Sales" count="$35,078" percentage={27.4} isLoss color="warning" extra="$20,395" />
