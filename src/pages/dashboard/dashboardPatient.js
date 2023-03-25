@@ -78,6 +78,7 @@ export default function DashboardPatient() {
     const [slot, setSlot] = useState('week');
     const [doctorCount, setDoctorCount] = useState('0');
     const [totalExamCount, setTotalExamCount] = useState('0');
+    const [totalPrescriptionCount, setTotalPrescriptionCount] = useState('0');
     const [examCounts, setExamCounts] = useState();
 
     useEffect(() => {
@@ -106,7 +107,17 @@ export default function DashboardPatient() {
                 Authorization: `Bearer ${cookies.token}`
             }
         }).then((res) => {
-            setTotalExamCount(res.data);
+            setTotalExamCount(res.data.toString());
+        });
+    }, []);
+
+    useEffect(() => {
+        api.get(`/api/prescription/patient_total_count`, {
+            headers: {
+                Authorization: `Bearer ${cookies.token}`
+            }
+        }).then((res) => {
+            setTotalPrescriptionCount(res.data.toString());
         });
     }, []);
 
@@ -123,7 +134,7 @@ export default function DashboardPatient() {
                 <DashboardCard title="Celkový počet absolvovaných vyšetrení" count={totalExamCount} />
             </Grid>
             <Grid item xs={12} sm={6} md={4} lg={3}>
-                <DashboardCard title="Total Users" count="78,250" percentage={70.5} extra="8,900" />
+                <DashboardCard title="Celkový počet predpísaných receptov" count={totalPrescriptionCount} />
             </Grid>
             <Grid item xs={12} sm={6} md={4} lg={3}>
                 <DashboardCard title="Total Sales" count="$35,078" percentage={27.4} isLoss color="warning" extra="$20,395" />
