@@ -86,7 +86,7 @@ const ExamCountAreaChart = ({ slot, examCounts }) => {
 
     const [series, setSeries] = useState([
         {
-            name: 'Počet vykonaných vyšetrení',
+            name: 'Počet vyšetrení',
             data: examCounts.counts
         }
     ]);

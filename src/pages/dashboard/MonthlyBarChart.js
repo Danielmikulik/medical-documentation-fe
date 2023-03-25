@@ -43,15 +43,16 @@ const barChartOptions = {
 
 // ==============================|| MONTHLY BAR CHART ||============================== //
 
-const MonthlyBarChart = () => {
+const MonthlyBarChart = ({ prescriptionCounts }) => {
     const theme = useTheme();
 
     const { primary, secondary } = theme.palette.text;
     const info = theme.palette.info.light;
 
-    const [series] = useState([
+    const [series, setSeries] = useState([
         {
-            data: [80, 95, 70, 42, 65, 55, 78]
+            name: 'Počet predpísaných receptov',
+            data: prescriptionCounts.counts
         }
     ]);
 
@@ -62,11 +63,40 @@ const MonthlyBarChart = () => {
             ...prevState,
             colors: [info],
             xaxis: {
+                categories: prescriptionCounts.months,
                 labels: {
                     style: {
-                        colors: [secondary, secondary, secondary, secondary, secondary, secondary, secondary]
+                        colors: [
+                            secondary,
+                            secondary,
+                            secondary,
+                            secondary,
+                            secondary,
+                            secondary,
+                            secondary,
+                            secondary,
+                            secondary,
+                            secondary,
+                            secondary,
+                            secondary
+                        ]
+                    }
+                },
+                axisBorder: {
+                    show: true,
+                    color: info
+                },
+                tickAmount: prescriptionCounts.months.length
+            },
+            yaxis: {
+                labels: {
+                    style: {
+                        colors: [secondary]
                     }
                 }
+            },
+            grid: {
+                borderColor: info
             },
             tooltip: {
                 theme: 'light'
@@ -77,7 +107,7 @@ const MonthlyBarChart = () => {
 
     return (
         <div id="chart">
-            <ReactApexChart options={options} series={series} type="bar" height={365} />
+            <ReactApexChart options={options} series={series} type="bar" height={450} />
         </div>
     );
 };
