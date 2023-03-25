@@ -1,22 +1,16 @@
 // material-ui
-import { Box, Stack, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { useCookies } from 'react-cookie';
 import { useEffect, useState } from 'react';
-import parseJwt from '../../utils/jwtUtil';
 import api from '../../services/api';
 import logError from '../../utils/errorHandler';
 
 export default function InsuranceHistory() {
-    const labels = [];
-    const values = [];
-
-    const [cookies, setCookie] = useCookies(['userLogin', 'token']);
+    const [cookies, setCookie] = useCookies(['token']);
 
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-
-    const role = parseJwt(cookies.token)?.Authorities[0].authority.toLowerCase();
 
     useEffect(() => {
         api.post(

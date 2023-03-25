@@ -22,12 +22,12 @@ const icons = {
 
 const dashboard = {
     id: 'group-dashboard',
-    title: 'Navigation',
+    title: 'Navigácia',
     type: 'group',
     children: [
         {
             id: 'dashboard',
-            title: 'Dashboard',
+            title: 'Prehľad',
             type: 'item',
             url: '/home',
             icon: icons.DashboardOutlined,
@@ -170,24 +170,6 @@ const dashboard = {
             role: 'admin'
         },
         {
-            id: 'changeDoctorsDepartment',
-            title: 'Zmena oddelenia',
-            type: 'item',
-            url: '/department_change',
-            icon: icons.ChangeCircleOutlinedIcon,
-            breadcrumbs: false,
-            role: 'admin'
-        },
-        {
-            id: 'changePatientsHealthInsurance',
-            title: 'Zmena zdravotnej poisťovne',
-            type: 'item',
-            url: '/health_insurance_change',
-            icon: icons.ChangeCircleOutlinedIcon,
-            breadcrumbs: false,
-            role: 'admin'
-        },
-        {
             id: 'addPerson',
             title: 'Pridať osobu',
             type: 'item',
@@ -220,6 +202,24 @@ const dashboard = {
             type: 'item',
             url: '/register_user',
             icon: icons.AddBoxOutlinedIcon,
+            breadcrumbs: false,
+            role: 'admin'
+        },
+        {
+            id: 'changeDoctorsDepartment',
+            title: 'Zmena oddelenia',
+            type: 'item',
+            url: '/department_change',
+            icon: icons.ChangeCircleOutlinedIcon,
+            breadcrumbs: false,
+            role: 'admin'
+        },
+        {
+            id: 'changePatientsHealthInsurance',
+            title: 'Zmena zdravotnej poisťovne',
+            type: 'item',
+            url: '/health_insurance_change',
+            icon: icons.ChangeCircleOutlinedIcon,
             breadcrumbs: false,
             role: 'admin'
         }

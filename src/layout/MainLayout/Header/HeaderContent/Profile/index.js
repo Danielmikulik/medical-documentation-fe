@@ -11,11 +11,12 @@ import {
     ClickAwayListener,
     Grid,
     IconButton,
+    ListItemButton,
+    ListItemIcon,
+    ListItemText,
     Paper,
     Popper,
     Stack,
-    Tab,
-    Tabs,
     Typography
 } from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';
@@ -23,12 +24,12 @@ import PersonIcon from '@mui/icons-material/Person';
 // project import
 import MainCard from 'components/MainCard';
 import Transitions from 'components/@extended/Transitions';
-import ProfileTab from './ProfileTab';
-import SettingTab from './SettingTab';
 
-import { LogoutOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
+import { LogoutOutlined, UserOutlined } from '@ant-design/icons';
 import { useAuth } from '../../../../../hooks/auth';
 import { useCookies } from 'react-cookie';
+import parseJwt from '../../../../../utils/jwtUtil';
+import { useNavigate } from 'react-router-dom';
 
 // tab panel wrapper
 function TabPanel({ children, value, index, ...other }) {
@@ -45,18 +46,13 @@ TabPanel.propTypes = {
     value: PropTypes.any.isRequired
 };
 
-function a11yProps(index) {
-    return {
-        id: `profile-tab-${index}`,
-        'aria-controls': `profile-tabpanel-${index}`
-    };
-}
-
 // ==============================|| HEADER CONTENT - PROFILE ||============================== //
 
 const Profile = () => {
     const theme = useTheme();
-    const [cookies, setCookie] = useCookies(['userLogin']);
+    const [cookies, setCookie] = useCookies(['token']);
+    const userLogin = parseJwt(cookies.token)?.sub;
+    const navigate = useNavigate();
 
     const { logout } = useAuth();
     const handleLogout = async () => {
@@ -76,10 +72,8 @@ const Profile = () => {
         setOpen(false);
     };
 
-    const [value, setValue] = useState(0);
-
-    const handleChange = (event, newValue) => {
-        setValue(newValue);
+    const handleProfileClick = () => {
+        navigate('/profile');
     };
 
     const iconBackColorOpen = 'grey.300';
@@ -103,7 +97,7 @@ const Profile = () => {
                     <Avatar sx={{ width: 32, height: 32 }}>
                         <PersonIcon />
                     </Avatar>
-                    <Typography variant="subtitle1">{cookies.userLogin}</Typography>
+                    <Typography variant="subtitle1">{userLogin}</Typography>
                 </Stack>
             </ButtonBase>
             <Popper
@@ -148,10 +142,7 @@ const Profile = () => {
                                                             <PersonIcon />
                                                         </Avatar>
                                                         <Stack>
-                                                            <Typography variant="h6">{cookies.userLogin}</Typography>
-                                                            {/*<Typography variant="body2" color="textSecondary">*/}
-                                                            {/*    UI/UX Designer*/}
-                                                            {/*</Typography>*/}
+                                                            <Typography variant="h6">{userLogin}</Typography>
                                                         </Stack>
                                                     </Stack>
                                                 </Grid>
@@ -162,49 +153,18 @@ const Profile = () => {
                                                 </Grid>
                                             </Grid>
                                         </CardContent>
-                                        {open && (
-                                            <>
-                                                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                                                    <Tabs
-                                                        variant="fullWidth"
-                                                        value={value}
-                                                        onChange={handleChange}
-                                                        aria-label="profile tabs"
-                                                    >
-                                                        <Tab
-                                                            sx={{
-                                                                display: 'flex',
-                                                                flexDirection: 'row',
-                                                                justifyContent: 'center',
-                                                                alignItems: 'center',
-                                                                textTransform: 'capitalize'
-                                                            }}
-                                                            icon={<UserOutlined style={{ marginBottom: 0, marginRight: '10px' }} />}
-                                                            label="Profil"
-                                                            {...a11yProps(0)}
-                                                        />
-                                                        <Tab
-                                                            sx={{
-                                                                display: 'flex',
-                                                                flexDirection: 'row',
-                                                                justifyContent: 'center',
-                                                                alignItems: 'center',
-                                                                textTransform: 'capitalize'
-                                                            }}
-                                                            icon={<SettingOutlined style={{ marginBottom: 0, marginRight: '10px' }} />}
-                                                            label="Setting"
-                                                            {...a11yProps(1)}
-                                                        />
-                                                    </Tabs>
-                                                </Box>
-                                                <TabPanel value={value} index={0} dir={theme.direction}>
-                                                    <ProfileTab handleLogout={handleLogout} />
-                                                </TabPanel>
-                                                <TabPanel value={value} index={1} dir={theme.direction}>
-                                                    <SettingTab />
-                                                </TabPanel>
-                                            </>
-                                        )}
+                                        <ListItemButton onClick={handleProfileClick}>
+                                            <ListItemIcon>
+                                                <UserOutlined />
+                                            </ListItemIcon>
+                                            <ListItemText primary="Zobraziť profil" />
+                                        </ListItemButton>
+                                        <ListItemButton onClick={handleLogout}>
+                                            <ListItemIcon>
+                                                <LogoutOutlined />
+                                            </ListItemIcon>
+                                            <ListItemText primary="Odhlásiť" />
+                                        </ListItemButton>
                                     </MainCard>
                                 </ClickAwayListener>
                             </Paper>
