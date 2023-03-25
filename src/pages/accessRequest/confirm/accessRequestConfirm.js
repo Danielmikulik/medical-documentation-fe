@@ -158,6 +158,10 @@ function Access() {
             {
                 accessorKey: 'accessibleUntil',
                 header: 'Sprístupniť do'
+            },
+            {
+                accessorKey: 'state',
+                header: 'stav'
             }
         ],
         []
@@ -197,7 +201,6 @@ function Access() {
             <FormControlLabel
                 control={<Switch checked={showRejected} onChange={(e, v) => setShowRejected(v)} />}
                 label="Zobraziť zamietnuté"
-                labelPlacement="right"
                 sx={{ mb: 3, mr: 2 }}
             />
             <MaterialReactTable
