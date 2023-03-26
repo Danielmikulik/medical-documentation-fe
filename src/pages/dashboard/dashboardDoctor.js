@@ -158,7 +158,9 @@ export default function DashboardDoctor() {
                     </Grid>
                 </Grid>
                 <MainCard content={false} sx={{ mt: 1.5 }}>
-                    <Box sx={{ pt: 1, pr: 2 }}>{examCounts && <ExamCountAreaChart slot={slot} examCounts={examCounts} />}</Box>
+                    <Box sx={{ pt: 1, pr: 2 }}>
+                        {examCounts && <ExamCountAreaChart slot={slot} counts={examCounts} name={'Počet vykonaných vyšetrení'} />}
+                    </Box>
                 </MainCard>
             </Grid>
             <Grid item xs={12} md={5} lg={5}>

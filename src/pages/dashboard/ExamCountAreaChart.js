@@ -30,7 +30,7 @@ const areaChartOptions = {
 
 // ==============================|| INCOME AREA CHART ||============================== //
 
-const ExamCountAreaChart = ({ slot, examCounts }) => {
+const ExamCountAreaChart = ({ slot, counts, name }) => {
     const theme = useTheme();
 
     const { primary, secondary } = theme.palette.text;
@@ -43,7 +43,7 @@ const ExamCountAreaChart = ({ slot, examCounts }) => {
             ...prevState,
             colors: [theme.palette.primary.main, theme.palette.primary[700]],
             xaxis: {
-                categories: examCounts.months,
+                categories: counts.months,
                 labels: {
                     style: {
                         colors: [
@@ -66,7 +66,7 @@ const ExamCountAreaChart = ({ slot, examCounts }) => {
                     show: true,
                     color: line
                 },
-                tickAmount: examCounts.months.length
+                tickAmount: counts.months.length
             },
             yaxis: {
                 labels: {
@@ -86,8 +86,8 @@ const ExamCountAreaChart = ({ slot, examCounts }) => {
 
     const [series, setSeries] = useState([
         {
-            name: 'Počet vyšetrení',
-            data: examCounts.counts
+            name: name,
+            data: counts.counts
         }
     ]);
 
@@ -95,7 +95,8 @@ const ExamCountAreaChart = ({ slot, examCounts }) => {
 };
 
 ExamCountAreaChart.propTypes = {
-    slot: PropTypes.string
+    slot: PropTypes.string,
+    name: PropTypes.string
 };
 
 export default ExamCountAreaChart;

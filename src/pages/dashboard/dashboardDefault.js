@@ -20,7 +20,7 @@ import {
 
 // project import
 import OrdersTable from './OrdersTable';
-import ExamCountAreaChart from './ExamCountAreaChart';
+import CountByMonthAreaChart from './ExamCountAreaChart';
 import MonthlyBarChart from './MonthlyBarChart';
 import ReportAreaChart from './ReportAreaChart';
 import SalesColumnChart from './SalesColumnChart';
@@ -35,6 +35,7 @@ import avatar3 from 'assets/images/users/avatar-3.png';
 import avatar4 from 'assets/images/users/avatar-4.png';
 import api from '../../services/api';
 import { useCookies } from 'react-cookie';
+import ExamCountAreaChart from './ExamCountAreaChart';
 
 // avatar style
 const avatarSX = {
@@ -79,6 +80,17 @@ export default function DashboardDefault() {
     const [patientCount, setPatientCount] = useState('0');
     const [doctorCount, setDoctorCount] = useState('0');
     const [hospitalCount, setHospitalCount] = useState('0');
+    const [newUserCounts, setNewUserCounts] = useState();
+
+    useEffect(() => {
+        api.get(`/api/user/created_last_year`, {
+            headers: {
+                Authorization: `Bearer ${cookies.token}`
+            }
+        }).then((res) => {
+            setNewUserCounts(res.data);
+        });
+    }, []);
 
     useEffect(() => {
         api.get(`/api/patient/count`, {
@@ -128,39 +140,39 @@ export default function DashboardDefault() {
 
             {/*<Grid item md={8} sx={{ display: { sm: 'none', md: 'block', lg: 'none' } }} />*/}
 
-            {/*/!* row 2 *!/*/}
-            {/*<Grid item xs={12} md={7} lg={8}>*/}
-            {/*    <Grid container alignItems="center" justifyContent="space-between">*/}
-            {/*        <Grid item>*/}
-            {/*            <Typography variant="h5">Unique Visitor</Typography>*/}
-            {/*        </Grid>*/}
-            {/*        <Grid item>*/}
-            {/*            <Stack direction="row" alignItems="center" spacing={0}>*/}
-            {/*                <Button*/}
-            {/*                    size="small"*/}
-            {/*                    onClick={() => setSlot('month')}*/}
-            {/*                    color={slot === 'month' ? 'primary' : 'secondary'}*/}
-            {/*                    variant={slot === 'month' ? 'outlined' : 'text'}*/}
-            {/*                >*/}
-            {/*                    Month*/}
-            {/*                </Button>*/}
-            {/*                <Button*/}
-            {/*                    size="small"*/}
-            {/*                    onClick={() => setSlot('week')}*/}
-            {/*                    color={slot === 'week' ? 'primary' : 'secondary'}*/}
-            {/*                    variant={slot === 'week' ? 'outlined' : 'text'}*/}
-            {/*                >*/}
-            {/*                    Week*/}
-            {/*                </Button>*/}
-            {/*            </Stack>*/}
-            {/*        </Grid>*/}
-            {/*    </Grid>*/}
-            {/*    <MainCard content={false} sx={{ mt: 1.5 }}>*/}
-            {/*        <Box sx={{ pt: 1, pr: 2 }}>*/}
-            {/*            <ExamCountAreaChart slot={slot} />*/}
-            {/*        </Box>*/}
-            {/*    </MainCard>*/}
-            {/*</Grid>*/}
+            {/* row 2 */}
+            <Grid item xs={12} md={12} lg={12}>
+                <Grid container alignItems="center" justifyContent="space-between">
+                    <Grid item>
+                        <Typography variant="h5">Noví používateľia</Typography>
+                    </Grid>
+                    <Grid item>
+                        <Stack direction="row" alignItems="center" spacing={0}>
+                            <Button
+                                size="small"
+                                onClick={() => setSlot('month')}
+                                color={slot === 'month' ? 'primary' : 'secondary'}
+                                variant={slot === 'month' ? 'outlined' : 'text'}
+                            >
+                                Month
+                            </Button>
+                            <Button
+                                size="small"
+                                onClick={() => setSlot('week')}
+                                color={slot === 'week' ? 'primary' : 'secondary'}
+                                variant={slot === 'week' ? 'outlined' : 'text'}
+                            >
+                                Week
+                            </Button>
+                        </Stack>
+                    </Grid>
+                </Grid>
+                <MainCard content={false} sx={{ mt: 1.5 }}>
+                    <Box sx={{ pt: 1, pr: 2 }}>
+                        {newUserCounts && <ExamCountAreaChart slot={slot} counts={newUserCounts} name={'Počet nových používateľov'} />}
+                    </Box>
+                </MainCard>
+            </Grid>
             {/*<Grid item xs={12} md={5} lg={4}>*/}
             {/*    <Grid container alignItems="center" justifyContent="space-between">*/}
             {/*        <Grid item>*/}
