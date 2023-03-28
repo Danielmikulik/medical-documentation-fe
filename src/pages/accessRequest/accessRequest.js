@@ -22,7 +22,12 @@ export default function AccessRequest() {
             }
         })
             .then((res) => {
-                setData(res.data);
+                const processedData = res.data.map((row) => {
+                    let temp = Object.assign({}, row);
+                    temp.rejected = temp.rejected === true ? 'Zamietnuté' : 'Nepotvrdené';
+                    return temp;
+                });
+                setData(processedData);
                 setError(null);
             })
             .catch(function (error) {
@@ -52,6 +57,10 @@ export default function AccessRequest() {
             {
                 accessorKey: 'count',
                 header: 'Počet záznamov'
+            },
+            {
+                accessorKey: 'rejected',
+                header: 'Zamietnuté'
             }
         ],
         []
