@@ -1,136 +1,85 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import moment from 'moment';
 
 // material-ui
-import {
-    Avatar,
-    AvatarGroup,
-    Box,
-    Button,
-    Grid,
-    List,
-    ListItemAvatar,
-    ListItemButton,
-    ListItemSecondaryAction,
-    ListItemText,
-    MenuItem,
-    Stack,
-    TextField,
-    Typography
-} from '@mui/material';
+import { Box, Button, Grid, Stack, Typography } from '@mui/material';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 // project import
-import OrdersTable from './OrdersTable';
-import ExamCountAreaChart from './ExamCountAreaChart';
-import MonthlyBarChart from './MonthlyBarChart';
-import ReportAreaChart from './ReportAreaChart';
-import SalesColumnChart from './SalesColumnChart';
+import IntervalCountAreaChart from './IntervalCountAreaChart';
+import IntervalCountBarChart from './IntervalCountBarChart';
 import MainCard from 'components/MainCard';
 import DashboardCard from 'components/cards/statistics/DashboardCard';
 
-// assets
-import { GiftOutlined, MessageOutlined, SettingOutlined } from '@ant-design/icons';
-import avatar1 from 'assets/images/users/avatar-1.png';
-import avatar2 from 'assets/images/users/avatar-2.png';
-import avatar3 from 'assets/images/users/avatar-3.png';
-import avatar4 from 'assets/images/users/avatar-4.png';
 import api from '../../services/api';
 import { useCookies } from 'react-cookie';
-
-// avatar style
-const avatarSX = {
-    width: 36,
-    height: 36,
-    fontSize: '1rem'
-};
-
-// action style
-const actionSX = {
-    mt: 0.75,
-    ml: 1,
-    top: 'auto',
-    right: 'auto',
-    alignSelf: 'flex-start',
-    transform: 'none'
-};
-
-// sales report status
-const status = [
-    {
-        value: 'today',
-        label: 'Today'
-    },
-    {
-        value: 'month',
-        label: 'This Month'
-    },
-    {
-        value: 'year',
-        label: 'This Year'
-    }
-];
+import TextField from '@mui/material/TextField';
 
 // ==============================|| DASHBOARD - DEFAULT ||============================== //
 
 export default function DashboardDoctor() {
     const [cookies, setCookie] = useCookies(['userLogin', 'token']);
 
-    const [value, setValue] = useState('today');
-    const [slot, setSlot] = useState('week');
-    const [patientCount, setPatientCount] = useState('0');
-    const [totalExamCount, setTotalExamCount] = useState('0');
-    const [totalPrescriptionCount, setTotalPrescriptionCount] = useState('0');
     const [examCounts, setExamCounts] = useState();
     const [prescriptionCounts, setPrescriptionCounts] = useState();
 
-    useEffect(() => {
-        api.get(`/api/doctor/patient_count`, {
-            headers: {
-                Authorization: `Bearer ${cookies.token}`
-            }
-        }).then((res) => {
-            setPatientCount(res.data.toString());
-        });
-    }, []);
+    // chart data
+    const now = new Date();
+    const startDay = new Date(now.getFullYear() - 1, (now.getMonth() + 1) % 12, 1);
+    const startDayString = moment(startDay).format('YYYY-MM-DD');
+    const endDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+    const endDayString = moment(endDay).format('YYYY-MM-DD');
+    const [dateSinceExams, setDateSinceExams] = useState(startDayString);
+    const [dateUntilExams, setDateUntilExams] = useState(endDayString);
+    const [slotExams, setSlotExams] = useState('month');
+    const [seriesExams, setSeriesExams] = useState([{}]);
+    const [dateSincePrescriptions, setDateSincePrescriptions] = useState(startDayString);
+    const [dateUntilPrescriptions, setDateUntilPrescriptions] = useState(endDayString);
+    const [slotPrescriptions, setSlotPrescriptions] = useState('month');
+    const [seriesPrescriptions, setSeriesPrescriptions] = useState([{}]);
 
     useEffect(() => {
-        api.get(`/api/med_exams/doctor_stats`, {
+        loadExamsData();
+    }, [dateSinceExams, dateUntilExams, slotExams]);
+
+    useEffect(() => {
+        loadPrescriptionsData();
+    }, [dateSincePrescriptions, dateUntilPrescriptions, slotPrescriptions]);
+
+    function loadExamsData() {
+        api.get(`/api/med_exams/doctor_stats?dateSince=${dateSinceExams}&dateUntil=${dateUntilExams}&interval=${slotExams}`, {
             headers: {
                 Authorization: `Bearer ${cookies.token}`
             }
         }).then((res) => {
             setExamCounts(res.data);
+            setSeriesExams([
+                {
+                    name: 'Počet vykonaných vyšetrení',
+                    data: res.data.counts
+                }
+            ]);
         });
-    }, []);
+    }
 
-    useEffect(() => {
-        api.get(`/api/prescription/doctor_stats`, {
-            headers: {
-                Authorization: `Bearer ${cookies.token}`
+    function loadPrescriptionsData() {
+        api.get(
+            `/api/prescription/doctor_stats?dateSince=${dateSincePrescriptions}&dateUntil=${dateUntilPrescriptions}&interval=${slotPrescriptions}`,
+            {
+                headers: {
+                    Authorization: `Bearer ${cookies.token}`
+                }
             }
-        }).then((res) => {
+        ).then((res) => {
             setPrescriptionCounts(res.data);
+            setSeriesPrescriptions([
+                {
+                    name: 'Počet predpísaných receptov',
+                    data: res.data.counts
+                }
+            ]);
         });
-    }, []);
-
-    useEffect(() => {
-        api.get(`/api/med_exams/doctor_total_exam_count`, {
-            headers: {
-                Authorization: `Bearer ${cookies.token}`
-            }
-        }).then((res) => {
-            setTotalExamCount(res.data.toString());
-        });
-    }, []);
-
-    useEffect(() => {
-        api.get(`/api/prescription/doctor_total_count`, {
-            headers: {
-                Authorization: `Bearer ${cookies.token}`
-            }
-        }).then((res) => {
-            setTotalPrescriptionCount(res.data.toString());
-        });
-    }, []);
+    }
 
     return (
         <Grid container rowSpacing={4.5} columnSpacing={2.75}>
@@ -139,27 +88,82 @@ export default function DashboardDoctor() {
                 <Typography variant="h5">Prehľad</Typography>
             </Grid>
             <Grid item xs={12} sm={6} md={4} lg={3}>
-                <DashboardCard title="Počet pacientov" count={patientCount} />
+                <DashboardCard
+                    title="Počet pacientov"
+                    optionsUrl={'/api/disease_type/all'}
+                    url={'/api/doctor/patient_count'}
+                    param={'diseaseType'}
+                    label={'Choroba'}
+                />
             </Grid>
             <Grid item xs={12} sm={6} md={4} lg={3}>
-                <DashboardCard title="Celkový počet vykonaných vyšetrení" count={totalExamCount} />
+                <DashboardCard
+                    title="Celkový počet vykonaných vyšetrení"
+                    optionsUrl={'/api/disease_type/all'}
+                    url={'/api/med_exams/doctor_total_exam_count'}
+                    param={'diseaseType'}
+                    label={'Choroba'}
+                />
             </Grid>
             <Grid item xs={12} sm={6} md={4} lg={3}>
-                <DashboardCard title="Celkový počet predpísaných receptov" count={totalPrescriptionCount} />
+                <DashboardCard
+                    title="Celkový počet predpísaných receptov"
+                    optionsUrl={'/api/medication/all'}
+                    url={'/api/prescription/doctor_total_count'}
+                    param={'medication'}
+                    label={'Liek'}
+                />
             </Grid>
-
             <Grid item md={8} sx={{ display: { sm: 'none', md: 'block', lg: 'none' } }} />
 
             {/* row 2 */}
             <Grid item xs={12} md={7} lg={7}>
                 <Grid container alignItems="center" justifyContent="space-between">
                     <Grid item>
-                        <Typography variant="h5">Vykonané vyšetrenia</Typography>
+                        <Typography variant="h5" sx={{ mb: 1 }}>
+                            Vykonané vyšetrenia
+                        </Typography>
+                    </Grid>
+                    <Grid item>
+                        <Stack direction="row" alignItems="center" spacing={0}>
+                            <DatePicker
+                                label={'Od'}
+                                value={dateSinceExams}
+                                onChange={(value) => setDateSinceExams(moment(value.$d).format('YYYY-MM-DD'))}
+                                renderInput={(props) => <TextField {...props} sx={{ width: 150, mr: 1 }} />}
+                            />
+                            <DatePicker
+                                label={'Do'}
+                                value={dateUntilExams}
+                                onChange={(value) => setDateUntilExams(moment(value.$d).format('YYYY-MM-DD'))}
+                                renderInput={(props) => <TextField {...props} sx={{ width: 150 }} />}
+                            />
+                        </Stack>
+                    </Grid>
+                    <Grid item>
+                        <Stack direction="column" alignItems="center" spacing={0}>
+                            <Button
+                                size="small"
+                                onClick={() => setSlotExams('month')}
+                                color={slotExams === 'month' ? 'primary' : 'secondary'}
+                                variant={slotExams === 'month' ? 'outlined' : 'text'}
+                            >
+                                Mesiac
+                            </Button>
+                            <Button
+                                size="small"
+                                onClick={() => setSlotExams('week')}
+                                color={slotExams === 'week' ? 'primary' : 'secondary'}
+                                variant={slotExams === 'week' ? 'outlined' : 'text'}
+                            >
+                                Týždeň
+                            </Button>
+                        </Stack>
                     </Grid>
                 </Grid>
                 <MainCard content={false} sx={{ mt: 1.5 }}>
                     <Box sx={{ pt: 1, pr: 2 }}>
-                        {examCounts && <ExamCountAreaChart slot={slot} counts={examCounts} name={'Počet vykonaných vyšetrení'} />}
+                        {examCounts && <IntervalCountAreaChart slot={slotExams} counts={examCounts} series={seriesExams} />}
                     </Box>
                 </MainCard>
             </Grid>
@@ -168,10 +172,53 @@ export default function DashboardDoctor() {
                     <Grid item>
                         <Typography variant="h5">Predpísané recepty</Typography>
                     </Grid>
-                    <Grid item />
+                    <Grid item>
+                        <Stack direction="row" alignItems="center" spacing={0}>
+                            <DatePicker
+                                label={'Od'}
+                                value={dateSincePrescriptions}
+                                onChange={(value) => setDateSincePrescriptions(moment(value.$d).format('YYYY-MM-DD'))}
+                                renderInput={(props) => <TextField {...props} sx={{ width: 150, mr: 1 }} />}
+                            />
+                            <DatePicker
+                                label={'Do'}
+                                value={dateUntilPrescriptions}
+                                onChange={(value) => setDateUntilPrescriptions(moment(value.$d).format('YYYY-MM-DD'))}
+                                renderInput={(props) => <TextField {...props} sx={{ width: 150 }} />}
+                            />
+                        </Stack>
+                    </Grid>
+                    <Grid item>
+                        <Stack direction="column" alignItems="center" spacing={0}>
+                            <Button
+                                size="small"
+                                onClick={() => setSlotPrescriptions('month')}
+                                color={slotPrescriptions === 'month' ? 'primary' : 'secondary'}
+                                variant={slotPrescriptions === 'month' ? 'outlined' : 'text'}
+                            >
+                                Mesiac
+                            </Button>
+                            <Button
+                                size="small"
+                                onClick={() => setSlotPrescriptions('week')}
+                                color={slotPrescriptions === 'week' ? 'primary' : 'secondary'}
+                                variant={slotPrescriptions === 'week' ? 'outlined' : 'text'}
+                            >
+                                Týždeň
+                            </Button>
+                        </Stack>
+                    </Grid>
                 </Grid>
                 <MainCard sx={{ mt: 2 }} content={false}>
-                    <Box sx={{ pt: 1, pr: 2 }}>{prescriptionCounts && <MonthlyBarChart prescriptionCounts={prescriptionCounts} />}</Box>
+                    <Box sx={{ pt: 1, pr: 2 }}>
+                        {prescriptionCounts && (
+                            <IntervalCountBarChart
+                                slot={slotPrescriptions}
+                                prescriptionCounts={prescriptionCounts}
+                                series={seriesPrescriptions}
+                            />
+                        )}
+                    </Box>
                 </MainCard>
             </Grid>
         </Grid>

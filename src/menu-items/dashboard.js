@@ -6,6 +6,7 @@ import LocalHospitalIcon from '@mui/icons-material/LocalHospital';
 import AddBoxIcon from '@mui/icons-material/AddBox';
 import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined';
 import ChangeCircleOutlinedIcon from '@mui/icons-material/ChangeCircleOutlined';
+import CheckIcon from '@mui/icons-material/Check';
 
 // icons
 const icons = {
@@ -15,7 +16,8 @@ const icons = {
     LocalHospitalIcon,
     AddBoxIcon,
     AddBoxOutlinedIcon,
-    ChangeCircleOutlinedIcon
+    ChangeCircleOutlinedIcon,
+    CheckIcon
 };
 
 // ==============================|| MENU ITEMS - DASHBOARD ||============================== //
@@ -31,7 +33,26 @@ const dashboard = {
             type: 'item',
             url: '/home',
             icon: icons.DashboardOutlined,
-            breadcrumbs: false
+            breadcrumbs: false,
+            role: 'patient'
+        },
+        {
+            id: 'dashboard',
+            title: 'Prehľad',
+            type: 'item',
+            url: '/home',
+            icon: icons.DashboardOutlined,
+            breadcrumbs: false,
+            role: 'doctor'
+        },
+        {
+            id: 'dashboard',
+            title: 'Prehľad',
+            type: 'item',
+            url: '/home',
+            icon: icons.DashboardOutlined,
+            breadcrumbs: false,
+            role: 'admin'
         },
         {
             id: 'myExaminations',
@@ -96,6 +117,15 @@ const dashboard = {
             icon: icons.AddBoxOutlinedIcon,
             breadcrumbs: false,
             role: 'doctor'
+        },
+        {
+            id: 'confirmPrescription',
+            title: 'Vybrať recept',
+            type: 'item',
+            url: '/confirm_prescription',
+            icon: icons.CheckIcon,
+            breadcrumbs: false,
+            role: 'pharmacy'
         },
         {
             id: 'addDepartmentType',

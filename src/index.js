@@ -16,6 +16,9 @@ import App from './App';
 import { store } from 'store';
 import reportWebVitals from './reportWebVitals';
 import AppProvider from './hooks';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import 'dayjs/locale/sk';
 
 // ==============================|| MAIN - REACT DOM RENDER  ||============================== //
 
@@ -26,7 +29,9 @@ root.render(
         <ReduxProvider store={store}>
             <BrowserRouter>
                 <AppProvider>
-                    <App />
+                    <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={'sk'}>
+                        <App />
+                    </LocalizationProvider>
                 </AppProvider>
             </BrowserRouter>
         </ReduxProvider>

@@ -30,12 +30,10 @@ const areaChartOptions = {
 
 // ==============================|| INCOME AREA CHART ||============================== //
 
-const ExamCountAreaChart = ({ slot, counts, name }) => {
+const IntervalCountAreaChart = ({ slot, counts, series }) => {
     const theme = useTheme();
-
     const { primary, secondary } = theme.palette.text;
     const line = theme.palette.divider;
-
     const [options, setOptions] = useState(areaChartOptions);
 
     useEffect(() => {
@@ -43,30 +41,12 @@ const ExamCountAreaChart = ({ slot, counts, name }) => {
             ...prevState,
             colors: [theme.palette.primary.main, theme.palette.primary[700]],
             xaxis: {
-                categories: counts.months,
-                labels: {
-                    style: {
-                        colors: [
-                            secondary,
-                            secondary,
-                            secondary,
-                            secondary,
-                            secondary,
-                            secondary,
-                            secondary,
-                            secondary,
-                            secondary,
-                            secondary,
-                            secondary,
-                            secondary
-                        ]
-                    }
-                },
+                categories: counts.intervals,
                 axisBorder: {
                     show: true,
                     color: line
                 },
-                tickAmount: counts.months.length
+                tickAmount: counts.intervals.length
             },
             yaxis: {
                 labels: {
@@ -82,21 +62,14 @@ const ExamCountAreaChart = ({ slot, counts, name }) => {
                 theme: 'light'
             }
         }));
-    }, [primary, secondary, line, theme, slot]);
-
-    const [series, setSeries] = useState([
-        {
-            name: name,
-            data: counts.counts
-        }
-    ]);
+    }, [primary, secondary, line, theme, slot, counts]);
 
     return <ReactApexChart options={options} series={series} type="area" height={450} />;
 };
 
-ExamCountAreaChart.propTypes = {
+IntervalCountAreaChart.propTypes = {
     slot: PropTypes.string,
     name: PropTypes.string
 };
 
-export default ExamCountAreaChart;
+export default IntervalCountAreaChart;
