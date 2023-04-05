@@ -41,5 +41,7 @@ export function ProtectDashboardByRoles() {
             return <Navigate to="/home_patient" exact />;
         case 'ADMIN':
             return <Navigate to="/home_default" exact />;
+        case 'PHARMACY':
+            return <Navigate to="/confirm_prescription" exact />;
     }
 }

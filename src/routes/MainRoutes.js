@@ -24,6 +24,7 @@ import RegisterUserForm from '../pages/addForms/registerUserForm';
 import AddDoctorForm from '../pages/addForms/addDoctorForm';
 import DashboardPatient from '../pages/dashboard/dashboardPatient';
 import DashboardDoctor from '../pages/dashboard/dashboardDoctor';
+import PrescriptionConfirm from '../pages/prescription/confirm/prescriptionConfirm';
 
 // render - dashboard
 const DashboardDefault = Loadable(lazy(() => import('pages/dashboard/dashboardDefault')));
@@ -88,6 +89,15 @@ const MainRoutes = {
                         {
                             path: 'prescriptions',
                             element: <Prescriptions />
+                        }
+                    ]
+                },
+                {
+                    element: <ProtectRoutesByRoles allowedRoles={['pharmacy']} />,
+                    children: [
+                        {
+                            path: 'confirm_prescription',
+                            element: <PrescriptionConfirm />
                         }
                     ]
                 },

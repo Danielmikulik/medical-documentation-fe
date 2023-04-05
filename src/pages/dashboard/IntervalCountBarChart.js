@@ -43,18 +43,11 @@ const barChartOptions = {
 
 // ==============================|| MONTHLY BAR CHART ||============================== //
 
-const MonthlyBarChart = ({ prescriptionCounts }) => {
+const IntervalCountBarChart = ({ slot, prescriptionCounts, series }) => {
     const theme = useTheme();
 
     const { primary, secondary } = theme.palette.text;
     const info = theme.palette.info.light;
-
-    const [series, setSeries] = useState([
-        {
-            name: 'Počet predpísaných receptov',
-            data: prescriptionCounts.counts
-        }
-    ]);
 
     const [options, setOptions] = useState(barChartOptions);
 
@@ -63,37 +56,12 @@ const MonthlyBarChart = ({ prescriptionCounts }) => {
             ...prevState,
             colors: [info],
             xaxis: {
-                categories: prescriptionCounts.months,
-                labels: {
-                    style: {
-                        colors: [
-                            secondary,
-                            secondary,
-                            secondary,
-                            secondary,
-                            secondary,
-                            secondary,
-                            secondary,
-                            secondary,
-                            secondary,
-                            secondary,
-                            secondary,
-                            secondary
-                        ]
-                    }
-                },
+                categories: prescriptionCounts.intervals,
                 axisBorder: {
                     show: true,
                     color: info
                 },
-                tickAmount: prescriptionCounts.months.length
-            },
-            yaxis: {
-                labels: {
-                    style: {
-                        colors: [secondary]
-                    }
-                }
+                tickAmount: prescriptionCounts.intervals.length
             },
             grid: {
                 borderColor: info
@@ -103,7 +71,7 @@ const MonthlyBarChart = ({ prescriptionCounts }) => {
             }
         }));
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [primary, info, secondary]);
+    }, [primary, info, secondary, slot, prescriptionCounts]);
 
     return (
         <div id="chart">
@@ -112,4 +80,4 @@ const MonthlyBarChart = ({ prescriptionCounts }) => {
     );
 };
 
-export default MonthlyBarChart;
+export default IntervalCountBarChart;
