@@ -227,6 +227,15 @@ const dashboard = {
             role: 'admin'
         },
         {
+            id: 'addPharmacy',
+            title: 'Pridať lekáreň',
+            type: 'item',
+            url: '/add_pharmacy',
+            icon: icons.AddBoxOutlinedIcon,
+            breadcrumbs: false,
+            role: 'admin'
+        },
+        {
             id: 'register',
             title: 'Registrácia používateľa',
             type: 'item',

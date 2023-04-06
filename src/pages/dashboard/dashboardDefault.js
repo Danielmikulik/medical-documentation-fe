@@ -84,6 +84,15 @@ export default function DashboardDefault() {
                     label={'Oddelenie'}
                 />
             </Grid>
+            <Grid item xs={12} sm={6} md={4} lg={3}>
+                <DashboardCard
+                    title="Počet lekární"
+                    optionsUrl={'/api/city/names'}
+                    url={'/api/pharmacy/count'}
+                    param={'city'}
+                    label={'Mesto'}
+                />
+            </Grid>
 
             <Grid item md={8} sx={{ display: { sm: 'none', md: 'block', lg: 'none' } }} />
 
