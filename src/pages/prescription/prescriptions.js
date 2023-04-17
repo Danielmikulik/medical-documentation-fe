@@ -19,7 +19,6 @@ const Prescriptions = () => {
     const [isRefetching, setIsRefetching] = useState(false);
 
     //table state
-    const [rowSelection, setRowSelection] = useState({});
     const [pagination, setPagination] = useState({
         pageIndex: 0,
         pageSize: 5
@@ -61,6 +60,9 @@ const Prescriptions = () => {
             .then((res) => {
                 const processedData = res.data.content.map((row) => {
                     let temp = Object.assign({}, row);
+                    if (temp.retrievedAt === '01.01.0001 00:00') {
+                        temp.retrievedAt = 'Nevybraný';
+                    }
                     temp.doctor = <TooltipFetch endpoint={`/api/doctor/${temp.doctorId}`} title={temp.doctor} />;
                     return temp;
                 });
@@ -79,34 +81,6 @@ const Prescriptions = () => {
                 setIsRefetching(false);
             });
     }
-
-    // useEffect(() => {
-    //     api.get(`/api/prescription/patient_prescriptions?medication=${selectValue}`, {
-    //         headers: {
-    //             Authorization: `Bearer ${cookies.token}`
-    //         }
-    //     })
-    //         .then((res) => {
-    //             const processedData = res.data.map((row) => {
-    //                 let temp = Object.assign({}, row);
-    //                 if (temp.retrievedAt === '01.01.0001 00:00') {
-    //                     temp.retrievedAt = 'Nevybraný';
-    //                 }
-    //                 temp.doctor = <TooltipFetch endpoint={`/api/doctor/${temp.doctorId}`} title={temp.doctor} />;
-    //                 return temp;
-    //             });
-    //             setData(processedData);
-    //             setError(null);
-    //         })
-    //         .catch(function (error) {
-    //             setError(error.message);
-    //             setData(null);
-    //             logError(error);
-    //         })
-    //         .finally(() => {
-    //             setLoading(false);
-    //         });
-    // }, [selectValue]);
 
     function handleOnChange(event, value) {
         const newValue = value ? value : '';
@@ -129,7 +103,7 @@ const Prescriptions = () => {
             },
             {
                 accessorKey: 'doctor',
-                header: 'Doktor'
+                header: 'Lekár'
             },
             {
                 accessorKey: 'prescribedAt',
@@ -163,9 +137,6 @@ const Prescriptions = () => {
                 columns={columns}
                 data={data}
                 localization={MRT_Localization_CS}
-                enableRowSelection
-                getRowId={(row) => row.prescriptionId}
-                onRowSelectionChange={setRowSelection}
                 rowCount={totalRowCount}
                 pageCount={totalPageCount}
                 manualPagination
@@ -183,8 +154,7 @@ const Prescriptions = () => {
                     pagination,
                     showAlertBanner: isError,
                     showProgressBars: isRefetching,
-                    isLoading,
-                    rowSelection
+                    isLoading
                 }}
             />
         </>

@@ -30,15 +30,6 @@ import AddPharmacyForm from '../pages/addForms/addPharmacyForm';
 // render - dashboard
 const DashboardDefault = Loadable(lazy(() => import('pages/dashboard/dashboardDefault')));
 
-// render - sample page
-const SamplePage = Loadable(lazy(() => import('pages/extra-pages/SamplePage')));
-
-// render - utilities
-const Typography = Loadable(lazy(() => import('pages/components-overview/Typography')));
-const Color = Loadable(lazy(() => import('pages/components-overview/Color')));
-const Shadow = Loadable(lazy(() => import('pages/components-overview/Shadow')));
-const AntIcons = Loadable(lazy(() => import('pages/components-overview/AntIcons')));
-
 // ==============================|| MAIN ROUTING ||============================== //
 
 const MainRoutes = {
@@ -53,16 +44,8 @@ const MainRoutes = {
                     element: <Navigate to="home" exact />
                 },
                 {
-                    path: 'color',
-                    element: <Color />
-                },
-                {
                     path: 'home',
                     element: <ProtectDashboardByRoles />
-                },
-                {
-                    path: 'sample-page',
-                    element: <SamplePage />
                 },
                 {
                     path: 'home_default',
@@ -204,20 +187,13 @@ const MainRoutes = {
                     ]
                 },
                 {
-                    path: '/attachments/:examId',
-                    element: <Attachments />
-                },
-                {
-                    path: 'shadow',
-                    element: <Shadow />
-                },
-                {
-                    path: 'typography',
-                    element: <Typography />
-                },
-                {
-                    path: 'icons/ant',
-                    element: <AntIcons />
+                    element: <ProtectRoutesByRoles allowedRoles={['doctor', 'patient']} />,
+                    children: [
+                        {
+                            path: '/attachments/:examId',
+                            element: <Attachments />
+                        }
+                    ]
                 }
             ]
         }

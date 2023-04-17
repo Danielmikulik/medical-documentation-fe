@@ -42,7 +42,7 @@ function MedicalExam() {
     };
 
     const sendRequest = async (patient, examinationType, diseaseType, startTime, endTime, report, imageFile) => {
-        enqueueSnackbar(`Odosielam žiadosť o sprístupnenie záznamov.`, { variant: 'info' });
+        enqueueSnackbar(`Odosielam žiadosť o vytvorenie vyšetrenia.`, { variant: 'info' });
         await api
             .post(
                 '/api/med_exams/create',
@@ -242,7 +242,7 @@ function MedicalExam() {
                                             />
                                             <label htmlFor="file">
                                                 <Button component="span" variant="outlined" fullWidth>
-                                                    Nahrať fotku
+                                                    Nahrať fotografiu
                                                 </Button>
                                             </label>
                                             <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>

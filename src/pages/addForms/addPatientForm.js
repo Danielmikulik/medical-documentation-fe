@@ -17,7 +17,7 @@ function AddPatient() {
     const { enqueueSnackbar } = useSnackbar();
 
     useEffect(() => {
-        api.get(`/api/person/all`, {
+        api.get(`/api/person/unassigned`, {
             headers: {
                 Authorization: `Bearer ${cookies.token}`
             }
@@ -47,7 +47,7 @@ function AddPatient() {
     }, []);
 
     useEffect(() => {
-        api.get(`/api/user/logins`, {
+        api.get(`/api/user/unused_patient_logins`, {
             headers: {
                 Authorization: `Bearer ${cookies.token}`
             }

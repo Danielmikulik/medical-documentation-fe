@@ -141,11 +141,11 @@ function Access() {
             },
             {
                 accessorKey: 'requestDoctor',
-                header: 'Doktor - žiadosť'
+                header: 'Lekár - žiadosť'
             },
             {
                 accessorKey: 'examDoctor',
-                header: 'Doktor - vyšetrenie'
+                header: 'Lekár - vyšetrenie'
             },
             {
                 accessorKey: 'department',

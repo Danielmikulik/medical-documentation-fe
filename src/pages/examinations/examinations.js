@@ -25,6 +25,7 @@ const Examinations = ({ userRole }) => {
 
     //table state
     const [rowSelection, setRowSelection] = useState({});
+    const [columnFilters, setColumnFilters] = useState([]);
     const [pagination, setPagination] = useState({
         pageIndex: 0,
         pageSize: 5
@@ -47,7 +48,9 @@ const Examinations = ({ userRole }) => {
         const request =
             userRole === 'doctor'
                 ? api.post(
-                      `/api/med_exams/${userRole}?pageIndex=${pagination.pageIndex}&pageSize=${pagination.pageSize}`,
+                      `/api/med_exams/${userRole}?pageIndex=${pagination.pageIndex}&pageSize=${pagination.pageSize}${
+                          columnFilters ? '&' : ''
+                      }${columnFilters.map((filter) => `${filter.id}=${filter.value}`).join('&')}`,
                       {
                           value: selectValue?.split(' ')[0]
                       },
@@ -57,11 +60,16 @@ const Examinations = ({ userRole }) => {
                           }
                       }
                   )
-                : api.get(`/api/med_exams/${userRole}?pageIndex=${pagination.pageIndex}&pageSize=${pagination.pageSize}`, {
-                      headers: {
-                          Authorization: `Bearer ${cookies.token}`
+                : api.get(
+                      `/api/med_exams/${userRole}?pageIndex=${pagination.pageIndex}&pageSize=${pagination.pageSize}${
+                          columnFilters ? '&' : ''
+                      }${columnFilters.map((filter) => `${filter.id}=${filter.value}`).join('&')}`,
+                      {
+                          headers: {
+                              Authorization: `Bearer ${cookies.token}`
+                          }
                       }
-                  });
+                  );
 
         request
             .then((res) => {
@@ -84,7 +92,7 @@ const Examinations = ({ userRole }) => {
                 setIsLoading(false);
                 setIsRefetching(false);
             });
-    }, [selectValue, pagination]);
+    }, [selectValue, columnFilters, pagination]);
 
     useEffect(() => {
         const attachmentId = Object.keys(rowSelection)[0];
@@ -103,7 +111,7 @@ const Examinations = ({ userRole }) => {
             },
             {
                 accessorKey: 'doctor',
-                header: 'Doktor'
+                header: 'Lekár'
             }
         ],
         []
@@ -116,6 +124,10 @@ const Examinations = ({ userRole }) => {
         });
     }
     columns.push(
+        {
+            accessorKey: 'department',
+            header: 'Oddelenie'
+        },
         {
             accessorKey: 'startTime',
             header: 'Začiatok'
@@ -154,6 +166,7 @@ const Examinations = ({ userRole }) => {
                 rowCount={totalRowCount}
                 pageCount={totalPageCount}
                 manualPagination
+                manualFiltering
                 muiToolbarAlertBannerProps={
                     isError
                         ? {
@@ -162,8 +175,10 @@ const Examinations = ({ userRole }) => {
                           }
                         : undefined
                 }
+                onColumnFiltersChange={setColumnFilters}
                 onPaginationChange={setPagination}
                 state={{
+                    columnFilters,
                     pagination,
                     showAlertBanner: isError,
                     showProgressBars: isRefetching,

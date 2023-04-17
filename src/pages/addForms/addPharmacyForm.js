@@ -25,7 +25,7 @@ function AddPharmacy() {
     }, []);
 
     useEffect(() => {
-        api.get(`/api/user/logins`, {
+        api.get(`/api/user/unused_pharmacy_logins`, {
             headers: {
                 Authorization: `Bearer ${cookies.token}`
             }

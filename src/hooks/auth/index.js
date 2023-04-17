@@ -2,7 +2,7 @@ import { createContext, useContext, useMemo } from 'react';
 import { useCookies } from 'react-cookie';
 import { useNavigate } from 'react-router-dom';
 import api from '../../services/api';
-import parseJwt from '../../utils/jwtUtil';
+import logError from '../../utils/errorHandler';
 
 const UserContext = createContext();
 
@@ -11,21 +11,25 @@ export const UserProvider = ({ children }) => {
     const [cookies, setCookies, removeCookie] = useCookies();
 
     const login = async ({ userLogin, password }) => {
-        const res = await api.post('/api/auth/authenticate', {
-            userLogin: userLogin,
-            password: password
-        });
-        const jwt = parseJwt(res.data.token);
-
-        setCookies('token', res.data.token); // your token
-        setCookies('userLogin', jwt.sub); // optional data
-        // setCookies('userRole', jwt.role); // optional data
-
-        navigate('/home');
+        let error = true;
+        await api
+            .post('/api/auth/authenticate', {
+                userLogin: userLogin,
+                password: password
+            })
+            .then((res) => {
+                error = false;
+                setCookies('token', res.data.token);
+                navigate('/home');
+            })
+            .catch(function (error) {
+                logError(error);
+            });
+        return error;
     };
 
     const logout = () => {
-        ['token', 'userLogin', 'userRole'].forEach((obj) => removeCookie(obj)); // remove data save in cookies
+        ['token'].forEach((obj) => removeCookie(obj)); // remove data saved in cookies
         navigate('/login');
     };
 

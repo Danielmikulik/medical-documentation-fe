@@ -94,6 +94,7 @@ function CreatePrescriptionForm() {
                     <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
                         <Autocomplete
                             disablePortal
+                            freeSolo
                             options={patients}
                             sx={{ mb: 2 }}
                             fullWidth

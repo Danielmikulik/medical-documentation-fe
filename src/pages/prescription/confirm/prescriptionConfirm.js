@@ -3,9 +3,8 @@ import api from '../../../services/api';
 import MaterialReactTable from 'material-react-table';
 import { useCookies } from 'react-cookie';
 import { SnackbarProvider, useSnackbar } from 'notistack';
-import { Box, Button, FormControlLabel, Switch, Tooltip } from '@mui/material';
+import { Box, Button, Tooltip } from '@mui/material';
 import DoneIcon from '@mui/icons-material/Done';
-import BlockIcon from '@mui/icons-material/Block';
 import Typography from '@mui/material/Typography';
 import logError from '../../../utils/errorHandler';
 import { MRT_Localization_CS } from 'material-react-table/locales/cs';
@@ -127,8 +126,12 @@ function Prescription() {
                 header: 'Počet balení'
             },
             {
+                accessorKey: 'patient',
+                header: 'Pacient'
+            },
+            {
                 accessorKey: 'doctor',
-                header: 'Doktor'
+                header: 'Lekár'
             },
             {
                 accessorKey: 'prescribedAt',

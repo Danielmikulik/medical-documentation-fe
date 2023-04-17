@@ -17,7 +17,7 @@ function AddDoctor() {
     const { enqueueSnackbar } = useSnackbar();
 
     useEffect(() => {
-        api.get(`/api/person/all`, {
+        api.get(`/api/person/unassigned_doctors`, {
             headers: {
                 Authorization: `Bearer ${cookies.token}`
             }
@@ -47,7 +47,7 @@ function AddDoctor() {
     }, []);
 
     useEffect(() => {
-        api.get(`/api/user/logins`, {
+        api.get(`/api/user/unused_doctor_logins`, {
             headers: {
                 Authorization: `Bearer ${cookies.token}`
             }
